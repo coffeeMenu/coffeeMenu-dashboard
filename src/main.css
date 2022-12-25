@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'Yellowtail';
+  src: local('Yellowtail'),
+    url('./assets/fonts/Yellowtail-Regular.ttf') format('truetype');
+  font-weight: regular;
+}
+
+.logo-font {
+  font-family: 'Yellowtail';
+}

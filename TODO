@@ -1,0 +1,14 @@
+TODO: email validation(when users grow)
+TODO: add fa(persian) support
+TODO: dashboard panel settings
+    TODO: Toggling color mode
+TODO: enable lint to remove unused imports
+TODO: responsive(mobile-first)
+TODO: add close button to snackbars
+TODO: undo snackbar
+TODO: you not connected to the internet snackbar
+
+TODO: make login/register submit disable till `res` comes back from `PB`
+
+TODO: login/sign in by google
+TODO: email verification
