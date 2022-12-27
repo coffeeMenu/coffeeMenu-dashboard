@@ -4,6 +4,7 @@ import { r } from './modules/routes';
 import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Playground from './Playground';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         </Route>
         <Route path={r.register} element={<Register />} />
         <Route path={r.login} element={<Login />} />
+        <Route path={'/playground'} element={<Playground />} />
         {/* public routes */}
         {/* catch all */}
       </Routes>

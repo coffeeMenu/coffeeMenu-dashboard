@@ -12,3 +12,5 @@ TODO: make login/register submit disable till `res` comes back from `PB`
 
 TODO: login/sign in by google
 TODO: email verification
+TODO: favicon
+TODO: make sure welcome animation run once per session
