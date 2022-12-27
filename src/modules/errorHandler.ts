@@ -1,19 +1,25 @@
 export const handleError = (
   err: any,
   stack = 'not defined',
-  enqueueSnackbar: Function
+  enqueueSnackbar?: Function | null
 ) => {
-  console.log('status: ', err.status);
+  err && console.log(err);
 
-  const mainError = err.data.message;
-  console.log(mainError);
-  enqueueSnackbar(mainError, { variant: 'error' });
+  err.status && console.log('status: ', err.status);
 
-  const causes = err.data.data;
-  console.table(causes);
-  Object.entries(causes).forEach(([key, value]: any) => {
-    enqueueSnackbar(`${key} ${value?.message}`, { variant: 'info' });
-  });
+  const mainError = err.data?.message;
+  mainError && console.log(mainError);
+  enqueueSnackbar &&
+    mainError &&
+    enqueueSnackbar(mainError, { variant: 'error' });
+
+  const causes = err.data?.data;
+  causes && console.table(causes);
+  causes &&
+    Object.entries(causes).forEach(([key, value]: any) => {
+      enqueueSnackbar &&
+        enqueueSnackbar(`${key} ${value?.message}`, { variant: 'info' });
+    });
 
   console.log('on: ', stack);
 
