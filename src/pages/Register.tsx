@@ -15,6 +15,7 @@ import { handleError } from '../modules/errorHandler';
 import { useSnackbar } from 'notistack';
 import FullScreenLoading from '../components/shared/FullScreenLoading';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../components/shared/Logo';
 
 export default function Register() {
   const { enqueueSnackbar } = useSnackbar();
@@ -55,7 +56,6 @@ export default function Register() {
     <>
       <FullScreenLoading open={showLoading} />
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -64,10 +64,9 @@ export default function Register() {
             alignItems: 'center',
           }}
         >
-          {/* TODO: change with coffeeMenu logo */}
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <Typography variant="h3">
+            <Logo />
+          </Typography>
           <Typography component="h1" variant="h5">
             Register
           </Typography>
