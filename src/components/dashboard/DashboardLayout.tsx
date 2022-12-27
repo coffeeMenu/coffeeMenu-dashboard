@@ -4,18 +4,23 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import Toolbar from '@mui/material/Toolbar';
-import { AccountCircle, LogoutTwoTone } from '@mui/icons-material';
+import {
+  AccountCircleTwoTone,
+  LogoutTwoTone,
+  SettingsTwoTone,
+  ShoppingBagTwoTone,
+} from '@mui/icons-material';
 import { Grid, Menu, MenuItem, Typography } from '@mui/material';
 import { pb } from '../../modules/pocketbase';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../shared/Logo';
+import TheLink from '../shared/TheLink';
 
 // TODO!: responsive + bottom app bar(menu, home, user)
 // https://mui.com/material-ui/react-app-bar/#bottom-app-bar
@@ -23,8 +28,6 @@ import { useNavigate } from 'react-router-dom';
 const drawerWidth = 240;
 
 const DashboardLayout: React.FC<any> = ({ children, window }) => {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClose = () => {
@@ -34,35 +37,13 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
   const navigate = useNavigate();
   const logout = () => {
     pb.authStore.clear();
+    localStorage.clear();
     navigate(0);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={'Product'} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -97,7 +78,7 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
                   onClick={handleMenu}
                   color="inherit"
                 >
-                  <AccountCircle />
+                  <AccountCircleTwoTone />
                   <Typography sx={{ marginLeft: 0.5 }}>
                     {pb.authStore?.model?.username}
                   </Typography>
@@ -148,7 +129,36 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
           }}
           open
         >
-          {drawer}
+          <div>
+            <TheLink to={'/'}>
+              <Typography
+                sx={{ margin: 'auto', paddingY: 1.4, color: '#dbae84' }}
+                variant="h4"
+              >
+                <Logo />
+              </Typography>
+            </TheLink>
+            <Divider />
+            <List>
+              {/* TODO: sub menu categories */}
+              <ListItem key={'Products'}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ShoppingBagTwoTone />
+                  </ListItemIcon>
+                  <ListItemText primary={'Products'} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem key={'Settings'}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <SettingsTwoTone />
+                  </ListItemIcon>
+                  <ListItemText primary={'Settings'} />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </div>
         </Drawer>
       </Box>
       <Box
