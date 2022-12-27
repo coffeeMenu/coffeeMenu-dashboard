@@ -1,0 +1,51 @@
+
+.intro-animation .logo-font {
+    text-shadow: 0 0 5px #dbae84, 0 0 15px #dbae84, 0 0 20px #dbae84, 0 0 40px #dbae84, 0 0 60px #dbae84, 0 0 10px #ff8d00, 0 0 98px #dbae84;
+      color: #fff;
+    text-align: center;
+    animation: blink 2s forwards;
+    -webkit-animation: blink 2s forwards;
+  }
+  /* TODO: change animation to slide */
+  @-webkit-keyframes blink {
+    20%,
+    24%,
+    55% {
+      color: #111;
+      text-shadow: none;
+    }
+  
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+    text-shadow: 0 0 5px #dbae84, 0 0 15px #dbae84, 0 0 20px #dbae84, 0 0 40px #dbae84, 0 0 60px #dbae84, 0 0 10px #ff8d00, 0 0 98px #dbae84;
+      color: #fff;
+    }
+  }
+  
+  @keyframes blink {
+    20%,
+    24%,
+    55% {
+      color: #111;
+      text-shadow: none;
+    }
+  
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+    text-shadow: 0 0 5px #dbae84, 0 0 15px #dbae84, 0 0 20px #dbae84, 0 0 40px #dbae84, 0 0 60px #dbae84, 0 0 10px #ff8d00, 0 0 98px #dbae84;
+      color: #fff;
+    }
+  }
+  

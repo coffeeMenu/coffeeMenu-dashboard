@@ -1,10 +1,13 @@
-import Logo from '../../components/shared/Logo';
+import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import IntroAnimation from '../../components/dashboard/IntroAnimation';
 
 const Dashboard = () => {
   return (
-    <div>
-      <Logo />
-    </div>
+    <DashboardLayout>
+      {/* TODO */}
+      <IntroAnimation />
+      test
+    </DashboardLayout>
   );
 };
 
