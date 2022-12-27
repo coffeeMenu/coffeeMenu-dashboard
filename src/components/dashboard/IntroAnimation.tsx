@@ -12,7 +12,11 @@ const IntroAnimation = () => {
     }, 2900);
   });
 
-  if (show)
+  // show Intro Animation by at least 1 hour break
+  const oneHour = 3600000;
+  const lastTimeShow = localStorage.getItem('last-intro-animation-show');
+  if (lastTimeShow === null || Date.now() > parseInt(lastTimeShow) + oneHour) {
+    localStorage.setItem('last-intro-animation-show', Date.now().toString());
     return (
       <>
         <Backdrop
@@ -36,6 +40,7 @@ const IntroAnimation = () => {
         </Backdrop>
       </>
     );
+  }
 
   return <></>;
 };
