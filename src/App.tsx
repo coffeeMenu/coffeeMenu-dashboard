@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import RequireAuth from './components/auth/RequireAuth';
+import RequireNotAuth from './components/auth/RequireNotAuth';
 import { r } from './modules/routes';
 import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/Login';
@@ -10,16 +11,22 @@ function App() {
   return (
     <>
       <Routes>
-        {/* private routes */}
-        {/* Require not auth */}
+        {/* private routes(Require auth) */}
         <Route element={<RequireAuth />}>
           <Route index element={<Dashboard />} />
         </Route>
-        <Route path={r.register} element={<Register />} />
-        <Route path={r.login} element={<Login />} />
-        <Route path={'/playground'} element={<Playground />} />
+
+        {/* Require not auth */}
+        <Route element={<RequireNotAuth />}>
+          <Route path={r.register} element={<Register />} />
+          <Route path={r.login} element={<Login />} />
+        </Route>
+
         {/* public routes */}
+        <Route path={'/playground'} element={<Playground />} />
+
         {/* catch all */}
+        <Route path="*" element={<div>404</div>} />
       </Routes>
     </>
   );
