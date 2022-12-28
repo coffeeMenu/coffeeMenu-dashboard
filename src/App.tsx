@@ -3,6 +3,9 @@ import RequireAuth from './components/auth/RequireAuth';
 import RequireNotAuth from './components/auth/RequireNotAuth';
 import { r } from './modules/routes';
 import Dashboard from './pages/dashboard/Dashboard';
+import DashboardIndex from './pages/dashboard/DashboardIndex';
+import Products from './pages/dashboard/products/Products';
+import Settings from './pages/dashboard/settings/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Playground from './Playground';
@@ -13,7 +16,11 @@ function App() {
       <Routes>
         {/* private routes(Require auth) */}
         <Route element={<RequireAuth />}>
-          <Route index element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />}>
+            <Route path={'/'} element={<DashboardIndex />} />
+            <Route path={r.products} element={<Products />} />
+            <Route path={r.settings} element={<Settings />} />
+          </Route>
         </Route>
 
         {/* Require not auth */}

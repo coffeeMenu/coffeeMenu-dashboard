@@ -21,6 +21,7 @@ import { pb } from '../../modules/pocketbase';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../shared/Logo';
 import TheLink from '../shared/TheLink';
+import { r } from '../../modules/routes';
 
 // TODO!: responsive + bottom app bar(menu, home, user)
 // https://mui.com/material-ui/react-app-bar/#bottom-app-bar
@@ -44,9 +45,6 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -100,7 +98,7 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
                   onClick={handleClose}
                 >
                   {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
-                  {/* TODO: add functionallity */}
+                  {/* TODO: add functionality */}
                   <MenuItem onClick={logout}>
                     <LogoutTwoTone sx={{ marginRight: 2 }} />
                     Logout
@@ -141,22 +139,34 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
             <Divider />
             <List>
               {/* TODO: sub menu categories */}
-              <ListItem key={'Products'}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <ShoppingBagTwoTone />
-                  </ListItemIcon>
-                  <ListItemText primary={'Products'} />
-                </ListItemButton>
-              </ListItem>
-              <ListItem key={'Settings'}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <SettingsTwoTone />
-                  </ListItemIcon>
-                  <ListItemText primary={'Settings'} />
-                </ListItemButton>
-              </ListItem>
+              {[
+                {
+                  text: 'Products',
+                  icon: <ShoppingBagTwoTone />,
+                  link: r.products,
+                },
+                {
+                  text: 'Settings',
+                  icon: <SettingsTwoTone />,
+                  link: r.settings,
+                },
+              ].map((item) => {
+                return (
+                  <TheLink
+                    key={item.text}
+                    underline="none"
+                    color="inherit"
+                    to={item.link}
+                  >
+                    <ListItem>
+                      <ListItemButton>
+                        <ListItemIcon>{item.icon}</ListItemIcon>
+                        <ListItemText primary={item.text} />
+                      </ListItemButton>
+                    </ListItem>
+                  </TheLink>
+                );
+              })}
             </List>
           </div>
         </Drawer>
