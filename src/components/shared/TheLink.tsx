@@ -6,11 +6,13 @@ import './TheLink.css';
 type TheLinkProps = {
   children: JSX.Element[] | JSX.Element | string;
   to: string;
+  // All other props
+  [rest: string]: any;
 };
 
-const TheLink: React.FC<TheLinkProps> = ({ children, to }) => {
+const TheLink: React.FC<TheLinkProps> = ({ children, to, ...rest }) => {
   return (
-    <MLink component={Link} to={to} underline="hover">
+    <MLink component={Link} to={to} underline="hover" {...rest}>
       {children}
     </MLink>
   );

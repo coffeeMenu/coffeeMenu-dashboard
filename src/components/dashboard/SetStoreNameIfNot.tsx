@@ -69,11 +69,12 @@ const SetStoreNameIfNot = () => {
       enqueueSnackbar('you can always changed it in settings', {
         variant: 'info',
       });
-      enqueueSnackbar('we picked a random store name for you', {
+      enqueueSnackbar('OK, we picked a random name for you', {
         variant: 'success',
       });
     });
-  };
+    setShow(false);
+  };    
 
   if (show)
     return (
