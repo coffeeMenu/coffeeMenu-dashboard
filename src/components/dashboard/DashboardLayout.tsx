@@ -100,7 +100,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
             color="inherit"
             to={item.link}
           >
-            <ListItem onClick={toggleDrawer}>
+            <ListItem>
               <ListItemButton>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
@@ -221,7 +221,11 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
           >
             <MenuIcon sx={{ fontSize: 33 }} />
           </IconButton>
-          <Drawer open={drawerOpen} onClose={toggleDrawer}>
+          <Drawer
+            onClick={toggleDrawer}
+            open={drawerOpen}
+            onClose={toggleDrawer}
+          >
             <Box sx={{ width: 250 }}>{drawerList}</Box>
           </Drawer>
           <TheLink color="inherit" to={'/'}>
