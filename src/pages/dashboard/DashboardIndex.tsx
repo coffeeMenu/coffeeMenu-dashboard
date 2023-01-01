@@ -32,7 +32,7 @@ const DashboardIndex = () => {
   return (
     // TODO: some hover effects
     <Grid container spacing={2}>
-      <Grid item sx={{ fontSize: '2em' }} textAlign="center">
+      <Grid item sx={{ fontSize: '1.5em' }} textAlign="center">
         <TheLink to={r.products} underline="none">
           <Card
             sx={{
@@ -42,14 +42,14 @@ const DashboardIndex = () => {
             }}
           >
             <CardContent>
-              <ShoppingBagTwoTone sx={{ fontSize: '2em' }} />
+              <ShoppingBagTwoTone sx={{ fontSize: '1.5em' }} />
               <br />
               Products
             </CardContent>
           </Card>
         </TheLink>
       </Grid>
-      <Grid item sx={{ fontSize: '2em' }} textAlign="center">
+      <Grid item sx={{ fontSize: '1.5em' }} textAlign="center">
         <TheLink to={r.settings} underline="none">
           <Card
             sx={{
@@ -59,7 +59,7 @@ const DashboardIndex = () => {
             }}
           >
             <CardContent sx={{ paddingX: 3 }}>
-              <SettingsTwoTone sx={{ fontSize: '2em' }} />
+              <SettingsTwoTone sx={{ fontSize: '1.5em' }} />
               <br />
               Settings
             </CardContent>
