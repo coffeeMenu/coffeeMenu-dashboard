@@ -11,24 +11,24 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import {
+  AccountCircle,
   AccountCircleTwoTone,
+  Home,
   LogoutTwoTone,
   SettingsTwoTone,
   ShoppingBagTwoTone,
 } from '@mui/icons-material';
-import { Grid, Menu, MenuItem, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Button, Grid, Menu, MenuItem, Typography } from '@mui/material';
 import { pb } from '../../modules/pocketbase';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../shared/Logo';
 import TheLink from '../shared/TheLink';
 import { r } from '../../modules/routes';
 
-// TODO!: responsive + bottom app bar(menu, home, user)
-// https://mui.com/material-ui/react-app-bar/#bottom-app-bar
-
 const drawerWidth = 240;
 
-const DashboardLayout: React.FC<any> = ({ children, window }) => {
+const DashboardLayout: React.FC<any> = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClose = () => {
@@ -46,8 +46,78 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  return (
-    <Box sx={{ display: 'flex' }}>
+  const userMenu = (
+    <Menu
+      id="menu-appbar"
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+      onClick={handleClose}
+    >
+      {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
+      {/* TODO: add functionality */}
+      <MenuItem onClick={logout}>
+        <LogoutTwoTone sx={{ marginRight: 2 }} />
+        Logout
+      </MenuItem>
+    </Menu>
+  );
+
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const drawerList = (
+    <List>
+      {/* TODO: sub menu categories */}
+      {[
+        {
+          text: 'Products',
+          icon: <ShoppingBagTwoTone />,
+          link: r.products,
+        },
+        {
+          text: 'Settings',
+          icon: <SettingsTwoTone />,
+          link: r.settings,
+        },
+      ].map((item) => {
+        return (
+          <TheLink
+            key={item.text}
+            underline="none"
+            color="inherit"
+            to={item.link}
+          >
+            <ListItem onClick={toggleDrawer}>
+              <ListItemButton>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          </TheLink>
+        );
+      })}
+    </List>
+  );
+
+  const bigScreen = (
+    <Box
+      sx={{
+        display: 'flex',
+      }}
+    >
       {/* TODO nav,profile, hide on mobile */}
       <AppBar
         position="fixed"
@@ -81,29 +151,7 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
                     {pb.authStore?.model?.username}
                   </Typography>
                 </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                  onClick={handleClose}
-                >
-                  {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
-                  {/* TODO: add functionality */}
-                  <MenuItem onClick={logout}>
-                    <LogoutTwoTone sx={{ marginRight: 2 }} />
-                    Logout
-                  </MenuItem>
-                </Menu>
+                {userMenu}
               </div>
             </Grid>
           </Grid>
@@ -137,37 +185,7 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
               </Typography>
             </TheLink>
             <Divider />
-            <List>
-              {/* TODO: sub menu categories */}
-              {[
-                {
-                  text: 'Products',
-                  icon: <ShoppingBagTwoTone />,
-                  link: r.products,
-                },
-                {
-                  text: 'Settings',
-                  icon: <SettingsTwoTone />,
-                  link: r.settings,
-                },
-              ].map((item) => {
-                return (
-                  <TheLink
-                    key={item.text}
-                    underline="none"
-                    color="inherit"
-                    to={item.link}
-                  >
-                    <ListItem>
-                      <ListItemButton>
-                        <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText primary={item.text} />
-                      </ListItemButton>
-                    </ListItem>
-                  </TheLink>
-                );
-              })}
-            </List>
+            {drawerList}
           </div>
         </Drawer>
       </Box>
@@ -183,6 +201,86 @@ const DashboardLayout: React.FC<any> = ({ children, window }) => {
         {children}
       </Box>
     </Box>
+  );
+
+  const smallScreen = (
+    <Box>
+      <Grid sx={{ padding: '10px' }}>{children}</Grid>
+      <AppBar
+        position="fixed"
+        color="primary"
+        sx={{ top: 'auto', bottom: 0, padding: '10px' }}
+      >
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleDrawer}
+          >
+            <MenuIcon sx={{ fontSize: 33 }} />
+          </IconButton>
+          <Drawer open={drawerOpen} onClose={toggleDrawer}>
+            <Box sx={{ width: 250 }}>{drawerList}</Box>
+          </Drawer>
+          <TheLink color="inherit" to={'/'}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+            >
+              <Home sx={{ fontSize: 33 }} />
+            </IconButton>
+          </TheLink>
+          <div>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              edge="start"
+              color="inherit"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+            >
+              <AccountCircle sx={{ fontSize: 33 }} />
+            </IconButton>
+            {userMenu}
+          </div>
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
+
+  // if small screen
+  // show small screen
+  // else
+  return (
+    <>
+      <Grid
+        sx={{
+          display: {
+            xs: 'block',
+            sm: 'block',
+            md: 'none',
+          },
+        }}
+      >
+        {smallScreen}
+      </Grid>
+      <Grid
+        sx={{
+          display: {
+            xs: 'none',
+            sm: 'none',
+            md: 'block',
+          },
+        }}
+      >
+        {bigScreen}
+      </Grid>
+    </>
   );
 };
 
