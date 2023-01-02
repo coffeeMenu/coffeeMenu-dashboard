@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { handleError } from '../../modules/errorHandler';
 import { pb } from '../../modules/pocketbase';
 import Button from '@mui/material/Button';
@@ -16,24 +16,26 @@ const SetStoreNameIfNot = () => {
   const [isSet, setIsSet] = useState(false);
   const [storeName, setStoreName] = useState('');
 
-  useMemo(() => {
-    pb.collection('stores')
-      .getList(1, 1, {
-        filter: `owner = "${pb.authStore.model?.id}"`,
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.items.length > 0) {
-          localStorage.setItem('store', res.items[0].id);
-          setIsSet(true);
-        } else {
-          setShow(true);
-        }
-      })
-      .catch((err) => {
-        handleError(err, 'setStoreNameIfNot');
-      });
-  }, [isSet]);
+  useEffect(() => {
+    if (!localStorage.getItem('store')) {
+      pb.collection('stores')
+        .getList(1, 1, {
+          filter: `owner = "${pb.authStore.model?.id}"`,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.items.length > 0) {
+            localStorage.setItem('store', res.items[0].id);
+            setIsSet(true);
+          } else {
+            setShow(true);
+          }
+        })
+        .catch((err) => {
+          handleError(err, 'setStoreNameIfNot');
+        });
+    }
+  }, []);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -74,7 +76,7 @@ const SetStoreNameIfNot = () => {
       });
     });
     setShow(false);
-  };    
+  };
 
   if (show)
     return (
