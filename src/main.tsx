@@ -19,6 +19,8 @@ const darkTheme = createTheme({
   ...themeConfigs,
 });
 
+// TODO: clean consoles on production
+
 const SnackbarCloseButton: React.FC<any> = ({ snackbarKey }) => {
   const { closeSnackbar } = useSnackbar();
 
