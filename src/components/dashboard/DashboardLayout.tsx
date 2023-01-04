@@ -31,6 +31,18 @@ const drawerWidth = 240;
 const DashboardLayout: React.FC<any> = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+  const getTitle = () => {
+    const pathname = window.location.pathname;
+    switch (pathname) {
+      case '/settings':
+        return 'Settings';
+      case '/products':
+        return 'Products';
+      default:
+        return 'Dashboard';
+    }
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -131,10 +143,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
         <Toolbar>
           <Grid container justifyContent={'space-between'}>
             <Grid item alignSelf={'center'}>
-              <Typography variant="h6">
-                {/* TODO: dynamic title */}
-                Dashboard
-              </Typography>
+              <Typography variant="h6">{getTitle()}</Typography>
             </Grid>
             <Grid item>
               <div>
