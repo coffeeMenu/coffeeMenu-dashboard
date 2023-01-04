@@ -19,9 +19,9 @@ import {
   ShoppingBagTwoTone,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Button, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { Grid, Menu, MenuItem, Typography, useMediaQuery } from '@mui/material';
 import { pb } from '../../modules/pocketbase';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../shared/Logo';
 import TheLink from '../shared/TheLink';
 import { r } from '../../modules/routes';
@@ -257,35 +257,9 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
     </Box>
   );
 
-  // if small screen
-  // show small screen
-  // else
-  return (
-    <>
-      <Grid
-        sx={{
-          display: {
-            xs: 'block',
-            sm: 'block',
-            md: 'none',
-          },
-        }}
-      >
-        {smallScreen}
-      </Grid>
-      <Grid
-        sx={{
-          display: {
-            xs: 'none',
-            sm: 'none',
-            md: 'block',
-          },
-        }}
-      >
-        {bigScreen}
-      </Grid>
-    </>
-  );
+  const smallScreenView = useMediaQuery('(min-width:700px)');
+
+  return <>{smallScreenView ? <>{bigScreen}</> : <>{smallScreen}</>}</>;
 };
 
 export default DashboardLayout;
