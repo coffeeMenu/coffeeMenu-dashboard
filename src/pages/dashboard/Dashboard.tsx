@@ -5,11 +5,13 @@ import SetStoreNameIfNot from '../../components/dashboard/SetStoreNameIfNot';
 
 const Dashboard = () => {
   return (
-    <DashboardLayout>
+    <>
       <SetStoreNameIfNot />
       <IntroAnimation />
-      <Outlet />
-    </DashboardLayout>
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    </>
   );
 };
 

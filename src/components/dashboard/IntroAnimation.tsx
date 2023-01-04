@@ -5,18 +5,23 @@ import { Box, Typography } from '@mui/material';
 import './IntroAnimation.css';
 
 const IntroAnimation = () => {
-  const [show, setShow] = useState(true);
-  useEffect(() => {
+  const [show, setShow] = useState(false);
+  // show Intro Animation by at least 1 hour break
+
+  if (show === true) {
     setTimeout(() => {
       setShow(false);
     }, 2900);
-  });
+  }
 
-  // show Intro Animation by at least 1 hour break
   const oneHour = 3600000;
   const lastTimeShow = localStorage.getItem('last-intro-animation-show');
   if (lastTimeShow === null || Date.now() > parseInt(lastTimeShow) + oneHour) {
     localStorage.setItem('last-intro-animation-show', Date.now().toString());
+    setShow(true);
+  }
+
+  if (show) {
     return (
       <>
         <Backdrop

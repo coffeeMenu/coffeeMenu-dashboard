@@ -8,14 +8,6 @@ import TheLink from '../../components/shared/TheLink';
 import { r } from '../../modules/routes';
 import Logo from '../../components/shared/Logo';
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 const DashboardIndex = () => {
   return (
     // TODO: some hover effects
