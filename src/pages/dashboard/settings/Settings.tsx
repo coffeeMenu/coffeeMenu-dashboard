@@ -9,6 +9,7 @@ const Settings = () => {
   const [store, setStore] = useState<any>();
   const [editMode, setEditMode] = useState(false);
   const prevStore = useRef<any>();
+  const textInput = useRef<any>(null);
 
   const storeId = localStorage.getItem('store');
 
@@ -30,13 +31,17 @@ const Settings = () => {
     getStoreName();
   }, []);
 
+  useEffect(() => {
+    if (editMode) textInput.current.focus();
+  }, [editMode]);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = () => {
     pb.collection('stores')
       .update(storeId as string, store)
       .then(() => {
-        enqueueSnackbar('Name changed successfully', {
+        enqueueSnackbar(`Name changed to ${store.name} successfully`, {
           variant: 'success',
         });
         setEditMode(false);
@@ -53,10 +58,9 @@ const Settings = () => {
 
   return (
     <Grid container alignItems="center">
-      {/* TODO focus on edit mode */}
-      {/* https://stackoverflow.com/questions/52222988/how-to-focus-a-material-ui-textfield-on-button-click */}
       <TextField
         disabled={!editMode}
+        inputRef={textInput}
         label="Store Name:"
         variant="outlined"
         value={store?.name || ''}
