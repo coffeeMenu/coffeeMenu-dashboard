@@ -1,7 +1,5 @@
 // TODO: client side form validation
-// TODO: client side form validation
-// TODO: client side form validation
-
+// TODO: improve performance
 import { Add, PhotoLibrary } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -16,6 +14,7 @@ import {
   InputAdornment,
   Switch,
   TextField,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -122,6 +121,7 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   const [showProductDrawer, setShowProductDrawer] = useState(false);
   const [pictures, setPictures] = useState<any>([]);
   const [categoryLabel, setCategoryLabel] = useState<any>(null);
+  const [errors, setErrors] = useState<any>(null);
 
   const getCategories = () => {
     pb.collection('products_category')
@@ -142,14 +142,65 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
       });
   };
 
+  const validateForm = () => {
+    console.log('validating...');
+    let tmpErrors: any = [];
+    console.log('state.name', state.name.length);
+
+    if (state.name.length === 0) {
+      tmpErrors = { ...tmpErrors, name: "name can't be blank" };
+    } else if (state.name.length < 2 || state.name.length > 64) {
+      tmpErrors = {
+        ...tmpErrors,
+        name: (
+          <>
+            <Typography>name should be between</Typography>
+            <Typography> 2 and 64 character</Typography>
+          </>
+        ),
+      };
+    }
+
+    console.log('!state.category', !state.category);
+
+    if (!state.category) {
+      tmpErrors = { ...tmpErrors, category: 'please select a category' };
+    }
+
+    console.log('state.pictures', state.pictures);
+    console.log(
+      'state.pictures.length',
+      state.pictures && state.pictures.length
+    );
+
+    if (state.pictures !== undefined && state.pictures.length > 5) {
+      tmpErrors = {
+        ...tmpErrors,
+        pictures: 'you can only set 5 picture per product',
+      };
+    }
+
+    setErrors(tmpErrors);
+  };
+
   // TODO perf improve
 
   useEffect(() => {
+    // TODO use autocomplete feature instead
     getCategories();
   }, []);
 
   useEffect(() => {
+    console.log('errors', errors);
+  }, [errors]);
+
+  useEffect(() => {
     console.log('state changed: ', state);
+
+    if (errors) {
+      validateForm();
+    }
+
     if (!state.pictures) {
       setPictures(undefined);
       return;
@@ -174,12 +225,26 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
 
   const addProduct = (callback?: Function) => {
     // get submit product to user store
+    console.log('will sending the data to backend');
+    validateForm();
+    if (!errors) {
+      console.log(state);
+    }
+    // form validation
+    // normalization
+    // how to uppload images?
+    // send
+    // adding the product to the store...
+    // TODO later: maybe some tips when user is waiting
+    // show success/error toast
+
     callback && callback();
   };
 
   const clearForm = () => {
     dispatch({ type: 'clearAll' });
     setCategoryLabel(null);
+    setErrors(null);
   };
 
   const handleClose = () => {
@@ -199,8 +264,8 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
 
   const handleSubmitAndClose = () => {
     addProduct(() => {
-      clearForm();
-      handleClose();
+      // clearForm();
+      // handleClose();
     });
   };
 
@@ -220,83 +285,106 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   const width = smallScreenView ? 400 : 250;
 
   const categoryPicker = (
-    <Autocomplete
-      sx={{ width: width }}
-      disablePortal
-      options={categories}
-      value={categoryLabel}
-      // value={findCategory(state.category)}
-      // TODO Value
-      onChange={(event: any, newValue: any | null) => {
-        setCategoryLabel(newValue);
-        const tmpCat = newValue?.id === undefined ? null : newValue?.id;
-        dispatch({ key: 'category', value: tmpCat });
-      }}
-      renderInput={(params) => <TextField {...params} label="Category*" />}
-    />
+    <>
+      {/* TODO: https://mui.com/material-ui/react-autocomplete/ */}
+      <Autocomplete
+        sx={{ width: width }}
+        disablePortal
+        options={categories}
+        value={categoryLabel}
+        // value={findCategory(state.category)}
+        // TODO Value
+        onChange={(event: any, newValue: any | null) => {
+          setCategoryLabel(newValue);
+          const tmpCat = newValue?.id === undefined ? null : newValue?.id;
+          dispatch({ key: 'category', value: tmpCat });
+        }}
+        renderInput={(params) => (
+          <TextField
+            error={errors && errors.category ? true : false}
+            {...params}
+            label="Category*"
+          />
+        )}
+      />
+      <Typography sx={{ color: '#ff4949' }}>
+        {errors && errors.category}
+      </Typography>
+    </>
   );
 
   const picturesInput = (
-    <Grid container sx={{ display: 'flex' }}>
-      <Grid item sx={{ flex: 20 }}>
-        <Button sx={{ width: '100%' }} variant="contained" component="label">
-          Add Picture
-          <PhotoLibrary sx={{ marginLeft: 1 }} />
-          <input
-            type="file"
-            hidden
-            accept="image/jpg, image/jpeg, image/png"
-            multiple
-            onChange={(e) => {
-              if (e.target.files && e.target.files.length > 0) {
-                dispatch({
-                  type: 'addPicture',
-                  key: 'pictures',
-                  value: e.target.files,
-                });
-              }
-            }}
-          />
-          {/* TODO: when chosen show thumbnail + delete + add more+ draggable(rearrange) */}
-        </Button>
-      </Grid>
-      {state.pictures && state.pictures.length > 0 ? (
-        <Grid item sx={{ flex: 1 }}>
-          <Button
-            sx={{ padding: 0 }}
-            onClick={() => {
-              setShowPicturesList(true);
-            }}
-          >
-            <Box
-              component="img"
-              sx={{
-                height: 36,
-                width: 36,
-                borderRadius: 10,
+    <>
+      <Grid container sx={{ display: 'flex' }}>
+        <Grid item sx={{ flex: 20 }}>
+          <Button sx={{ width: '100%' }} variant="contained" component="label">
+            {state.pictures == undefined || state.pictures.length === 0
+              ? 'Add Picture'
+              : 'Add More Pics'}
+            <PhotoLibrary sx={{ marginLeft: 1 }} />
+            <input
+              type="file"
+              hidden
+              accept="image/jpg, image/jpeg, image/png"
+              multiple
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  dispatch({
+                    type: 'addPicture',
+                    key: 'pictures',
+                    value: e.target.files,
+                  });
+                }
               }}
-              alt="The house from the offer."
-              src={pictures && pictures[0]}
             />
-            {/* {state.pictures && <img src={thumbnails} />} */}
+            {/* TODO: when chosen show thumbnail + delete + add more+ draggable(rearrange) */}
           </Button>
         </Grid>
-      ) : (
-        <></>
-      )}
-    </Grid>
+        {state.pictures && state.pictures.length > 0 ? (
+          <Grid item sx={{ flex: 1 }}>
+            <Button
+              sx={{ padding: 0 }}
+              onClick={() => {
+                setShowPicturesList(true);
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  height: 36,
+                  width: 36,
+                  borderRadius: 10,
+                }}
+                alt="The house from the offer."
+                src={pictures && pictures[0]}
+              />
+              {/* {state.pictures && <img src={thumbnails} />} */}
+            </Button>
+          </Grid>
+        ) : (
+          <></>
+        )}
+      </Grid>
+      <Typography sx={{ color: '#ff4949' }}>
+        {errors && errors.pictures}
+      </Typography>
+    </>
   );
 
   const nameInput = (
-    <TextField
-      sx={{ width: width }}
-      label="Name*"
-      variant="outlined"
-      value={state.name}
-      onChange={(e) => {
-        dispatch({ key: 'name', value: e.target.value });
-      }}
-    />
+    <>
+      <TextField
+        error={errors && errors.name ? true : false}
+        sx={{ width: width }}
+        label="Name*"
+        variant="outlined"
+        value={state.name}
+        onChange={(e) => {
+          dispatch({ key: 'name', value: e.target.value });
+        }}
+      />
+      <Box sx={{ color: '#ff4949' }}>{errors && errors.name}</Box>
+    </>
   );
 
   const priceInput = (
