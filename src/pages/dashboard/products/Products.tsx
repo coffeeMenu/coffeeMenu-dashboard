@@ -1,16 +1,16 @@
 import { ShoppingBagTwoTone } from '@mui/icons-material';
 import { Button, Grid, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import AddProduct from '../../../components/dashboard/products/AddProduct';
 import { useProducts } from '../../../contexts/ProductsProvider';
 import { handleError } from '../../../modules/errorHandler';
 import { pb } from '../../../modules/pocketbase';
 
-const storeId = localStorage.getItem('store');
-
 const Products = () => {
+  const storeId = localStorage.getItem('store');
+  const { products, fetchAllProducts } = useProducts();
   const [loading, setLoading] = useState(true);
-  const [isProducts, setIsProducts] = useState<boolean | undefined>();
+  const [isAnyProduct, setIsAnyProduct] = useState<boolean | undefined>();
 
   const [showAddProduct, setShowAddProduct] = useState(false);
 
@@ -18,14 +18,14 @@ const Products = () => {
     pb.collection('products')
       .getList(1, 50, {
         filter: `store="${storeId}"`,
-        $autoCancel: false,
       })
       .then((res) => {
         const total = res.totalItems;
         if (total > 0) {
-          setIsProducts(true);
+          fetchAllProducts();
+          setIsAnyProduct(true);
         } else {
-          setIsProducts(false);
+          setIsAnyProduct(false);
         }
       })
       .catch((err) => {
@@ -40,13 +40,31 @@ const Products = () => {
     checkIfAnyProduct();
   }, []);
 
-  if (!loading && isProducts === undefined) return <></>;
+  if (loading && isAnyProduct === undefined) return <></>;
+
+  const AddProductButton = (
+    <Button
+      onClick={() => {
+        setShowAddProduct(true);
+      }}
+      sx={{ marginTop: 2 }}
+      variant="contained"
+    >
+      Add Product
+    </Button>
+  );
 
   return (
     <>
       <AddProduct open={showAddProduct} setOpen={setShowAddProduct} />
-      {isProducts ? (
-        <>products exist</>
+      {isAnyProduct ? (
+        <>
+          {AddProductButton}
+          {products &&
+            products.map((p: any) => {
+              return <Typography key={p.id}>{p.name}</Typography>;
+            })}
+        </>
       ) : (
         <Grid
           container
@@ -59,18 +77,8 @@ const Products = () => {
           <Grid item>
             <ShoppingBagTwoTone sx={{ fontSize: 200, opacity: 0.1 }} />
           </Grid>
-          <Grid item>no product been has been added...</Grid>
-          <Grid item>
-            <Button
-              onClick={() => {
-                setShowAddProduct(true);
-              }}
-              sx={{ marginTop: 2 }}
-              variant="contained"
-            >
-              Add Product
-            </Button>
-          </Grid>
+          <Grid item>no product been has been added yet...</Grid>
+          <Grid item>{AddProductButton}</Grid>
         </Grid>
       )}
     </>

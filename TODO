@@ -21,3 +21,7 @@ TODO: test
 TODO: make notif colors like dashboard index
 
 TODO: accessibility check
+
+TODO: remove `any` types
+TODO: performance test(dev tools(make browser use less hardware))
+TODO: 3break point really small/ small /big + bigger

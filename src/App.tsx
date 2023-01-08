@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import RequireAuth from './components/auth/RequireAuth';
 import RequireNotAuth from './components/auth/RequireNotAuth';
+import ProductsProvider from './contexts/ProductsProvider';
 import { r } from './modules/routes';
 import Dashboard from './pages/dashboard/Dashboard';
 import DashboardIndex from './pages/dashboard/DashboardIndex';
@@ -18,7 +19,14 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path="/" element={<Dashboard />}>
             <Route path={'/'} element={<DashboardIndex />} />
-            <Route path={r.products} element={<Products />} />
+            <Route
+              path={r.products}
+              element={
+                <ProductsProvider>
+                  <Products />
+                </ProductsProvider>
+              }
+            />
             <Route path={r.settings} element={<Settings />} />
           </Route>
         </Route>

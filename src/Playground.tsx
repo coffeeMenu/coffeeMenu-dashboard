@@ -1,68 +1,93 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { ShoppingBagTwoTone } from '@mui/icons-material';
+import { Button, Grid, Typography } from '@mui/material';
+import { memo, useEffect, useState } from 'react';
+import AddProduct from './components/dashboard/products/AddProduct';
+import { handleError } from './modules/errorHandler';
+import { pb } from './modules/pocketbase';
 
-type Anchor = 'top' | 'left' | 'bottom' | 'right';
+const storeId = localStorage.getItem('store');
 
-export default function TemporaryDrawer() {
-  const [state, setState] = React.useState(false);
+const Playground = () => {
+  console.log('Products');
 
-  const toggleDrawer = () => {
-    setState(!state);
+  // check count products in store if > 0  show list
+  // else lets add one...
+  // const { products, fetchAllProducts } = useProducts();
+
+  const [loading, setLoading] = useState(true);
+  const [isProducts, setIsProducts] = useState<boolean | undefined>();
+
+  const [showAddProduct, setShowAddProduct] = useState(false);
+
+  const checkIfAnyProduct = () => {
+    console.log('checkIfAnyProduct');
+
+    pb.collection('products')
+      .getList(1, 50, {
+        filter: `store="${storeId}"`,
+      })
+      .then((res) => {
+        const total = res.totalItems;
+        if (total > 0) {
+          // fetchAllProducts();
+          setIsProducts(true);
+        } else {
+          setIsProducts(false);
+        }
+      })
+      .catch((err) => {
+        handleError(err, 'Playground, useEffect(checkIfProduct)');
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
   };
 
-  const list = () => (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer}
-      onKeyDown={toggleDrawer}
-    >
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+  useEffect(() => {
+    checkIfAnyProduct();
+  }, []);
+
+  if (!loading && isProducts === undefined) return <></>;
 
   return (
-    <div>
-      <React.Fragment key={'left'}>
-        <Button onClick={toggleDrawer}>{'left'}</Button>
-        <Drawer anchor={'left'} open={state} onClose={toggleDrawer}>
-          {list()}
-        </Drawer>
-      </React.Fragment>
-    </div>
+    <>
+      <AddProduct open={showAddProduct} setOpen={setShowAddProduct} />
+      {isProducts ? (
+        <>
+          hi
+          {/* {products &&
+            products.map((p: any) => {
+              return <Typography key={p.id}>{p.name}</Typography>;
+            })} */}
+        </>
+      ) : (
+        <Grid
+          container
+          justifyContent={'center'}
+          alignContent="center"
+          justifyItems={'center'}
+          direction="column"
+          textAlign={'center'}
+        >
+          <Grid item>
+            <ShoppingBagTwoTone sx={{ fontSize: 200, opacity: 0.1 }} />
+          </Grid>
+          <Grid item>no product been has been added...</Grid>
+          <Grid item>
+            <Button
+              onClick={() => {
+                setShowAddProduct(true);
+              }}
+              sx={{ marginTop: 2 }}
+              variant="contained"
+            >
+              Add Product
+            </Button>
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
-}
+};
+
+export default Playground;
