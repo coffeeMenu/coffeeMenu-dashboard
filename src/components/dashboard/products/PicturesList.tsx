@@ -1,5 +1,5 @@
 // TODO later: darg/drop
-import { Close, Info, InfoTwoTone, MoreVert } from '@mui/icons-material';
+import { Close, MoreVert } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -13,24 +13,27 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 
 type Props = {
   open: boolean;
   setOpen: Function;
   pictures: any;
-  dispatch: any;
+  onSetAsMainPicture: any;
+  onDeletePicture: any;
 };
 
 const PicturesList: React.FC<Props> = ({
   open = false,
   setOpen,
   pictures,
-  dispatch,
+  onSetAsMainPicture,
+  onDeletePicture,
 }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
 
   const [menusOpen, setMenusOpen] = useState<any>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -115,10 +118,7 @@ const PicturesList: React.FC<Props> = ({
                       >
                         <MenuItem
                           onClick={() => {
-                            dispatch({
-                              type: 'setAsMainPicture',
-                              key: index,
-                            });
+                            onSetAsMainPicture(index);
                           }}
                         >
                           Set as main
@@ -127,10 +127,7 @@ const PicturesList: React.FC<Props> = ({
                         {/* <MenuItem>Replace</MenuItem> */}
                         <MenuItem
                           onClick={() => {
-                            dispatch({
-                              type: 'deletePicture',
-                              key: index,
-                            });
+                            onDeletePicture(index);
                           }}
                           sx={{ color: '#ff4949' }}
                         >
@@ -162,4 +159,4 @@ const PicturesList: React.FC<Props> = ({
   return <></>;
 };
 
-export default PicturesList;
+export default (PicturesList);

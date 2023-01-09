@@ -1,6 +1,6 @@
 import { ShoppingBagTwoTone } from '@mui/icons-material';
 import { Button, Grid, Typography } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddProduct from '../../../components/dashboard/products/AddProduct';
 import { useProducts } from '../../../contexts/ProductsProvider';
 import { handleError } from '../../../modules/errorHandler';
