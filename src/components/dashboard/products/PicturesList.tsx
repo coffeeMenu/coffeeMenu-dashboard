@@ -11,6 +11,7 @@ import {
   Menu,
   MenuItem,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -54,6 +55,9 @@ const PicturesList: React.FC<Props> = ({
     setMenusOpen(false);
     setAnchorEl(null);
   };
+
+  const smallScreenView = useMediaQuery('(min-width:700px)');
+  const imageWidth = smallScreenView ? 400 : 230;
 
   if (open)
     return (
@@ -138,8 +142,8 @@ const PicturesList: React.FC<Props> = ({
                       component="img"
                       sx={{
                         objectFit: 'cover',
-                        height: 250,
-                        width: 250,
+                        height: imageWidth,
+                        width: imageWidth,
                       }}
                       // TODO alt:(name/desc)
                       src={pic}

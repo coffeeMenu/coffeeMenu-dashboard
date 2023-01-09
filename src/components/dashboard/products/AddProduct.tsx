@@ -18,7 +18,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import React, { memo, useEffect, useReducer, useState } from 'react';
+import React, { memo, useEffect, useReducer, useRef, useState } from 'react';
 import { handleError } from '../../../modules/errorHandler';
 import { pb } from '../../../modules/pocketbase';
 import DescriptionDrawer from './DescriptionDrawer';
@@ -118,10 +118,11 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [categories, setCategories] = useState<any>([]);
   const [showPicturesList, setShowPicturesList] = useState(false);
-  const [showProductDrawer, setShowProductDrawer] = useState(false);
   const [pictures, setPictures] = useState<any>([]);
   const [categoryLabel, setCategoryLabel] = useState<any>(null);
   const [errors, setErrors] = useState<any>(null);
+  const [descriptionMultiline, setDescriptionMultiline] = useState(false);
+  const descriptionInput = React.useRef<any>(null);
 
   const getCategories = () => {
     pb.collection('products_category')
@@ -195,6 +196,12 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   }, [errors]);
 
   useEffect(() => {
+    if (descriptionMultiline) {
+      descriptionInput.current.focus();
+    }
+  }, [descriptionMultiline]);
+
+  useEffect(() => {
     console.log('state changed: ', state);
 
     if (errors) {
@@ -232,7 +239,7 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
     }
     // form validation
     // normalization
-    // how to uppload images?
+    // how to upload images?
     // send
     // adding the product to the store...
     // TODO later: maybe some tips when user is waiting
@@ -307,9 +314,11 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
           />
         )}
       />
-      <Typography sx={{ color: '#ff4949' }}>
-        {errors && errors.category}
-      </Typography>
+      {errors ? (
+        <Typography sx={{ color: '#ff4949' }}>{errors.category}</Typography>
+      ) : (
+        <></>
+      )}
     </>
   );
 
@@ -319,8 +328,8 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
         <Grid item sx={{ flex: 20 }}>
           <Button sx={{ width: '100%' }} variant="contained" component="label">
             {state.pictures == undefined || state.pictures.length === 0
-              ? 'Add Picture'
-              : 'Add More Pics'}
+              ? 'Set Pictures'
+              : 'Add More'}
             <PhotoLibrary sx={{ marginLeft: 1 }} />
             <input
               type="file"
@@ -365,9 +374,11 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
           <></>
         )}
       </Grid>
-      <Typography sx={{ color: '#ff4949' }}>
-        {errors && errors.pictures}
-      </Typography>
+      {errors ? (
+        <Typography sx={{ color: '#ff4949' }}>{errors.pictures}</Typography>
+      ) : (
+        <></>
+      )}
     </>
   );
 
@@ -383,7 +394,7 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
           dispatch({ key: 'name', value: e.target.value });
         }}
       />
-      <Box sx={{ color: '#ff4949' }}>{errors && errors.name}</Box>
+      {errors ? <Box sx={{ color: '#ff4949' }}>{errors.name}</Box> : <></>}
     </>
   );
 
@@ -449,24 +460,23 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
 
               {nameInput}
 
-              <DescriptionDrawer
-                open={showProductDrawer}
-                setOpen={setShowProductDrawer}
-                description={state.description}
-                dispatch={dispatch}
-              />
               <TextField
                 sx={{ width: width }}
                 label="Description (opt)"
                 variant="outlined"
                 value={state.description}
-                onClick={() => {
-                  setShowProductDrawer(true);
+                onChange={(e) => {
+                  dispatch({ key: 'description', value: e.target.value });
                 }}
-                onKeyDown={(e) => {
-                  if (e.key !== 'Tab') {
-                    setShowProductDrawer(true);
-                  }
+                multiline={descriptionMultiline}
+                minRows={4}
+                maxRows={5}
+                inputRef={descriptionInput}
+                onFocus={() => {
+                  setDescriptionMultiline(true);
+                }}
+                onBlur={() => {
+                  setDescriptionMultiline(false);
                 }}
               />
 
@@ -475,7 +485,7 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
               {discountInput}
 
               <Grid>
-                Available:{' '}
+                Available:
                 <Switch
                   defaultChecked
                   onChange={() => {
