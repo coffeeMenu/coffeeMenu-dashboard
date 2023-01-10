@@ -59,21 +59,16 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
     if (state.pictures !== undefined && state.pictures.length > 5) {
       tmpErrors = {
         ...tmpErrors,
-        pictures: 'you can only set 5 picture per product',
+        pictures: 'you can only choose 5 picture',
       };
     }
 
     console.log('🚀 - validateForm - tmpErrors', tmpErrors);
     setErrors(tmpErrors);
+    return tmpErrors;
   };
 
-  useEffect(() => {
-    console.log('state changed: ', state);
-
-    if (errors) {
-      validateForm();
-    }
-
+  const updatePictures = () => {
     if (!state.pictures) {
       setPictures(undefined);
       return;
@@ -92,22 +87,42 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
         URL.revokeObjectURL(objectUrls[i]);
       };
     }
+  };
+
+  useEffect(() => {
+    console.log('state changed: ', state);
+
+    if (pictures?.length !== state.pictures?.length) {
+      updatePictures();
+    }
+
+    if (errors) {
+      validateForm();
+    }
   }, [state]);
+
+  useEffect(() => {
+    updatePictures();
+  }, [state.pictures]);
 
   const addProduct = (callback?: Function) => {
     // get submit product to user store
 
-    validateForm();
-    if (!errors || errors.length === 0) {
-      console.log('will sending the data to backend');
-      console.log(state);
+    const tmpErrors = validateForm();
+    console.log('🚀 - addProduct - tmpErrors', tmpErrors);
+    if (tmpErrors.length === undefined) {
+      console.log('will not sending the data to backend');
+      return;
     }
-    // form validation
-    // normalization
+    console.log('sending data to the backend');
+    console.log(state);
+
+    // comrpess images
+
+    // normalization?
     // how to upload images?
     // send
     // adding the product to the store...
-    // TODO later: maybe some tips when user is waiting
     // show success/error toast
 
     callback && callback();
