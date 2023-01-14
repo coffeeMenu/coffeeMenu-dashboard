@@ -13,7 +13,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, {  useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 type Props = {
   open: boolean;
@@ -33,7 +33,6 @@ const PicturesList: React.FC<Props> = ({
   const handleClose = () => {
     setOpen(false);
   };
-
 
   const [menusOpen, setMenusOpen] = useState<any>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -68,7 +67,7 @@ const PicturesList: React.FC<Props> = ({
         <DialogTitle>
           <Grid container justifyContent={'space-between'}>
             <Grid item>
-              Pictures
+              Pictures({pictures.length})
               <Typography>for better outcome,</Typography>
               <Typography>use square size photos.</Typography>
             </Grid>
@@ -159,4 +158,4 @@ const PicturesList: React.FC<Props> = ({
   return <></>;
 };
 
-export default (PicturesList);
+export default memo(PicturesList);

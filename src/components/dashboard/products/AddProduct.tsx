@@ -105,7 +105,7 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
     updatePictures();
   }, [state.pictures]);
 
-  const addProduct = (callback?: Function) => {
+  const postProduct = (callback?: Function) => {
     // get submit product to user store
 
     const tmpErrors = validateForm();
@@ -145,13 +145,13 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   };
 
   const handleSubmitAndClear = () => {
-    addProduct(() => {
+    postProduct(() => {
       clearForm();
     });
   };
 
   const handleSubmitAndClose = () => {
-    addProduct(() => {
+    postProduct(() => {
       // clearForm();
       // handleClose();
     });
