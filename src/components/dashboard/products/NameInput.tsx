@@ -12,6 +12,7 @@ const NameInput: FC<Props> = ({ sx, value, onChange, errors }) => {
   return (
     <>
       <TextField
+        autoFocus
         error={errors && errors.name ? true : false}
         sx={sx}
         label="Name*"

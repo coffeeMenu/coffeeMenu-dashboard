@@ -33,7 +33,9 @@ const ProductsProvider: FC<Props> = ({ children }) => {
       });
   };
   const addProduct = (product: any) => {
-    // add product if success add to state
+    let tmpArray = [...products];
+    tmpArray.unshift(product);
+    setProducts(tmpArray);
   };
   const updateProduct = (productId: number, product: any) => {
     // update product if success update state

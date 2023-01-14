@@ -12,6 +12,11 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useReducer, useState } from 'react';
+import { useProducts } from '../../../contexts/ProductsProvider';
+import { compressImage } from '../../../modules/compressImage';
+import { handleError } from '../../../modules/errorHandler';
+import { pb } from '../../../modules/pocketbase';
+import FullScreenLoading from '../../shared/FullScreenLoading';
 import AvailableToggle from './AvailableToggle';
 import CategoryPicker from './CategoryPicker';
 import DescriptionInput from './DescriptionInput';
@@ -30,10 +35,12 @@ type Props = {
 
 const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [posting, setPosting] = useState(false);
   const [categoryLabel, setCategoryLabel] = useState<any>(null);
   const [errors, setErrors] = useState<any>(null);
   const [pictures, setPictures] = useState<any>([]);
   const { enqueueSnackbar } = useSnackbar();
+  const { addProduct } = useProducts();
 
   const validateForm = () => {
     let tmpErrors: any = [];
@@ -105,27 +112,47 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
     updatePictures();
   }, [state.pictures]);
 
-  const postProduct = (callback?: Function) => {
-    // get submit product to user store
-
+  const postProduct = async (callback?: Function) => {
     const tmpErrors = validateForm();
     console.log('🚀 - addProduct - tmpErrors', tmpErrors);
     if (tmpErrors.length === undefined) {
       console.log('will not sending the data to backend');
       return;
     }
+    setPosting(true);
     console.log('sending data to the backend');
     console.log(state);
 
-    // comrpess images
+    const formData = new FormData();
+    formData.append('store', state.store as string);
+    formData.append('name', state.name);
+    formData.append('category', state.category);
+    formData.append('description', state.description);
+    // compressing pictures
+    if (state.pictures) {
+      for (let picture of state.pictures) {
+        const compressedPicture = await compressImage(picture);
+        formData.append('pictures', compressedPicture as Blob);
+      }
+    }
+    formData.append('price', state.price);
+    formData.append('discount', state.discount);
+    formData.append('available', state.available === true ? 'true' : 'false');
 
-    // normalization?
-    // how to upload images?
-    // send
-    // adding the product to the store...
-    // show success/error toast
-
-    callback && callback();
+    pb.collection('products')
+      .create(formData)
+      .then((res) => {
+        console.log(res);
+        callback && callback();
+        enqueueSnackbar('Product Added!', { variant: 'success' });
+        addProduct(res);
+      })
+      .catch((err) => {
+        handleError(err, 'AddProduct, postProduct()', enqueueSnackbar);
+      })
+      .finally(() => {
+        setPosting(false);
+      });
   };
 
   const clearForm = () => {
@@ -152,14 +179,10 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
 
   const handleSubmitAndClose = () => {
     postProduct(() => {
-      // clearForm();
-      // handleClose();
+      clearForm();
+      handleClose();
     });
   };
-
-  {
-    /* TODO:  add product(add, add another one) */
-  }
 
   const smallScreenView = useMediaQuery('(min-width:700px)');
   const width = smallScreenView ? 400 : 250;
@@ -167,7 +190,18 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
   if (open) {
     return (
       <>
-        <Dialog open={open} onClose={handleClose}>
+        <FullScreenLoading open={posting}>
+          <Typography sx={{ marginTop: 2 }}>
+            Adding Products To The Store...
+          </Typography>
+        </FullScreenLoading>
+        <Dialog
+          onKeyPress={(e: any) => {
+            e.ctrlKey && e.key === 'Enter' && handleSubmitAndClear();
+          }}
+          open={open}
+          onClose={handleClose}
+        >
           <DialogTitle>Add Product</DialogTitle>
 
           <Divider />
