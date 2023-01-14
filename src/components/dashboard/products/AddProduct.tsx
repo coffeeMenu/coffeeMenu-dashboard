@@ -162,6 +162,8 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
 
   const clearForm = () => {
     dispatch({ type: 'clearAll' });
+    const storeId = localStorage.getItem('store');
+    dispatch({ key: 'store', value: storeId });
     setCategoryLabel(null);
     setErrors(null);
     setPictures([]);
