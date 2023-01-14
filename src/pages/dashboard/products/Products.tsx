@@ -1,16 +1,40 @@
-import { ShoppingBagTwoTone } from '@mui/icons-material';
-import { Button, Grid, Typography } from '@mui/material';
+import {
+  Delete,
+  DeleteTwoTone,
+  Edit,
+  EditTwoTone,
+  ShoppingBagTwoTone,
+} from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import AddProduct from '../../../components/dashboard/products/AddProduct';
+import DeleteProduct from '../../../components/dashboard/products/DeleteProduct';
 import { useProducts } from '../../../contexts/ProductsProvider';
 import { handleError } from '../../../modules/errorHandler';
-import { pb } from '../../../modules/pocketbase';
+import { apiUrl, pb } from '../../../modules/pocketbase';
 
 const Products = () => {
   const storeId = localStorage.getItem('store');
   const { products, fetchAllProducts } = useProducts();
   const [loading, setLoading] = useState(true);
   const [isAnyProduct, setIsAnyProduct] = useState<boolean | undefined>();
+  const [openDeleteProduct, setOpenDeleteProduct] = useState(false);
+  const [deleteProduct, setDeleteProduct] = useState({
+    name: '',
+    id: '',
+  });
 
   const [showAddProduct, setShowAddProduct] = useState(false);
 
@@ -40,6 +64,11 @@ const Products = () => {
     checkIfAnyProduct();
   }, []);
 
+  const handleDelete = (id: string, name: string) => {
+    setOpenDeleteProduct(true);
+    setDeleteProduct({ id: id, name: name });
+  };
+
   if (loading && isAnyProduct === undefined) return <></>;
 
   const AddProductButton = (
@@ -50,6 +79,7 @@ const Products = () => {
       sx={{ marginTop: 2 }}
       variant="contained"
     >
+      {/* TODO sticky */}
       Add Product
     </Button>
   );
@@ -57,13 +87,85 @@ const Products = () => {
   return (
     <>
       <AddProduct open={showAddProduct} setOpen={setShowAddProduct} />
+      <DeleteProduct
+        open={openDeleteProduct}
+        setOpen={setOpenDeleteProduct}
+        id={deleteProduct.id}
+        name={deleteProduct.name}
+      />
       {isAnyProduct ? (
         <>
           {AddProductButton}
+          <List sx={{ width: '100%' }}></List>
           {products &&
             products.map((p: any) => {
-              return <Typography key={p.id}>{p.name}</Typography>;
+              return (
+                <ListItem
+                  key={p.id}
+                  sx={{
+                    border: '0.5px solid #333',
+                    borderRadius: 10,
+                    marginY: 1,
+                    opacity: p.available ? 1 : 0.5,
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      alt={p.name + ' ' + p.description}
+                      src={
+                        p.pictures[0] &&
+                        `${apiUrl}/api/files/${p.collectionId}/${p.id}/${p.pictures[0]}`
+                      }
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <>
+                        <Typography>{p.name}</Typography>
+                      </>
+                    }
+                  />
+                  <Box
+                    component={'span'}
+                    // {/* TODO $/euro/﷼/تومان */}
+                    sx={{ color: 'gray', marginRight: 1 }}
+                  >
+                    {p.price}
+                  </Box>
+                  <IconButton>
+                    <EditTwoTone
+                      sx={{ opacity: 0.8, color: p.available ? '' : 'gray' }}
+                      color="primary"
+                    />
+                    {/* TODO: move disabled to the end of the sort */}
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete(p.id, p.name)}>
+                    <DeleteTwoTone
+                      sx={{ opacity: 0.8, color: p.available ? '' : 'gray' }}
+                      color="error"
+                    />
+                  </IconButton>
+                </ListItem>
+              );
             })}
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </>
       ) : (
         <Grid

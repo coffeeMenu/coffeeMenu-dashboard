@@ -9,6 +9,12 @@ type Props = {
   children: ReactChildren;
 };
 
+const sort = (products: any) => {
+  console.log('products', products);
+  products = products.sort((a: any, b: any) => b.available - a.available);
+  return products;
+};
+
 const ProductsProvider: FC<Props> = ({ children }) => {
   const [products, setProducts] = useState<any>();
 
@@ -26,7 +32,7 @@ const ProductsProvider: FC<Props> = ({ children }) => {
         filter: `store="${storeId}"`,
       })
       .then((res) => {
-        setProducts(res);
+        setProducts(sort(res));
       })
       .catch((err) => {
         handleError(err, 'ProductProvider, fetchAllProducts');
@@ -35,13 +41,16 @@ const ProductsProvider: FC<Props> = ({ children }) => {
   const addProduct = (product: any) => {
     let tmpArray = [...products];
     tmpArray.unshift(product);
-    setProducts(tmpArray);
+    setProducts(sort(tmpArray));
   };
-  const updateProduct = (productId: number, product: any) => {
+  const updateProduct = (productId: string, product: any) => {
     // update product if success update state
   };
-  const deleteProduct = (productId: number) => {
-    // delete product if success update state
+  const deleteProduct = (productId: string) => {
+    console.log('here is the id');
+    console.log(productId);
+    const tmpArray = products.filter((p: any) => p.id !== productId);
+    setProducts(sort(tmpArray));
   };
 
   return (
