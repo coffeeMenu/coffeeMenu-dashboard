@@ -112,6 +112,11 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
     updatePictures();
   }, [state.pictures]);
 
+  useEffect(() => {
+    const storeId = localStorage.getItem('store');
+    dispatch({ key: 'store', value: storeId });
+  }, []);
+
   const postProduct = async (callback?: Function) => {
     const tmpErrors = validateForm();
     console.log('🚀 - addProduct - tmpErrors', tmpErrors);

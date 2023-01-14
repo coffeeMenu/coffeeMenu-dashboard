@@ -9,10 +9,8 @@ type ProductState = {
   available: boolean;
 };
 
-const storeId = localStorage.getItem('store');
-
 export const initialState: ProductState = {
-  store: storeId,
+  store: null,
   name: '',
   description: '',
   category: null,
@@ -27,7 +25,7 @@ export function reducer(
   action: {
     type?: string;
     key?: string | undefined;
-    value?: string | FileList | undefined | boolean;
+    value?: string | boolean | FileList | undefined | null;
   }
 ) {
   console.log('action.type', action.type);
