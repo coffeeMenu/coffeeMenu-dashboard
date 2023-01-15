@@ -10,12 +10,9 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { useSnackbar } from 'notistack';
 import React, { useEffect, useReducer, useState } from 'react';
-import { useProducts } from '../../../../contexts/ProductsProvider';
-import { compressImage } from '../../../../modules/compressImage';
-import { handleError } from '../../../../modules/errorHandler';
-import { pb } from '../../../../modules/pocketbase';
+import { useCategories } from '../../../../contexts/CategoriesProvider';
+import { apiUrl } from '../../../../modules/pocketbase';
 import FullScreenLoading from '../../../shared/FullScreenLoading';
 import AvailableToggle from './AvailableToggle';
 import CategoryPicker from './CategoryPicker';
@@ -29,10 +26,15 @@ import { ProductState, reducer } from './reducer';
 type Props = {
   open: boolean;
   setOpen: Function;
+  sending: boolean;
+  setSending: Function;
   editMode?: boolean;
-  initialState: ProductState;
-  initialCategoryLabel?: any;
-  initialPictures?: any;
+  initialState: ProductState & { collectionId?: string; id?: string };
+  onSubmit: Function;
+  texts: {
+    title: string;
+    sending: string;
+  };
 };
 
 // TODO performance test
@@ -40,18 +42,18 @@ type Props = {
 const ProductDrawer: React.FC<Props> = ({
   open = false,
   setOpen,
+  sending = false,
+  setSending,
   editMode = false,
   initialState,
-  initialCategoryLabel = null,
-  initialPictures = [],
+  onSubmit,
+  texts,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [posting, setPosting] = useState(false);
-  const [categoryLabel, setCategoryLabel] = useState<any>(initialCategoryLabel);
+  const [category, setCategory] = useState<any>(null);
   const [errors, setErrors] = useState<any>(null);
-  const [pictures, setPictures] = useState<any>(initialPictures);
-  const { enqueueSnackbar } = useSnackbar();
-  const { addProduct, updateProduct } = useProducts();
+  const [pictures, setPictures] = useState<any>();
+  const { categories } = useCategories();
 
   const validateForm = () => {
     let tmpErrors: any = [];
@@ -86,15 +88,15 @@ const ProductDrawer: React.FC<Props> = ({
     return tmpErrors;
   };
 
-  const updatePictures = () => {
-    if (!state.pictures) {
+  const updatePictures = (pics: any) => {
+    if (!pics || typeof pics[0] === 'string') {
       setPictures(undefined);
       return;
     }
 
     let tmp = [];
-    for (let i = 0; i < state.pictures.length; i++) {
-      tmp.push(URL.createObjectURL(state.pictures[i]));
+    for (let i = 0; i < pics.length; i++) {
+      tmp.push(URL.createObjectURL(pics[i]));
     }
     const objectUrls = tmp;
     setPictures(objectUrls);
@@ -107,11 +109,51 @@ const ProductDrawer: React.FC<Props> = ({
     }
   };
 
+  const urlToObject = async (imageUrl: string) => {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const file = new File([blob], 'image.png', { type: blob.type });
+    console.log(file);
+    return file;
+  };
+
+  const getPictures = () => {
+    const tmpPictures =
+      initialState.pictures && initialState.pictures.length > 0
+        ? initialState.pictures.map((p: string) => {
+            return urlToObject(p);
+          })
+        : undefined;
+    return tmpPictures;
+  };
+
+  useEffect(() => {
+    if (initialState.pictures) {
+      Promise.all(getPictures()).then((pics: any) => {
+        console.log('🚀 - Promise.all - pics', pics);
+        dispatch({
+          type: 'setPictures',
+          value: pics,
+        });
+        // updatePictures(pics);
+      });
+    }
+    if (categories) {
+      const tmpInitialCategory = categories.filter((cat: any) => {
+        return cat.id === initialState.category;
+      })[0];
+      setCategory(tmpInitialCategory);
+    }
+    if (JSON.stringify(initialState) !== JSON.stringify(state)) {
+      dispatch({ type: 'setState', state: initialState });
+    }
+  }, [initialState]);
+
   useEffect(() => {
     console.log('state changed: ', state);
 
     if (pictures?.length !== state.pictures?.length) {
-      updatePictures();
+      updatePictures(state.pictures);
     }
 
     if (errors) {
@@ -120,64 +162,35 @@ const ProductDrawer: React.FC<Props> = ({
   }, [state]);
 
   useEffect(() => {
-    updatePictures();
-  }, [state.pictures]);
-
-  useEffect(() => {
-    const storeId = localStorage.getItem('store');
-    dispatch({ key: 'store', value: storeId });
+    if (!editMode) {
+      const storeId = localStorage.getItem('store');
+      dispatch({ key: 'store', value: storeId });
+    }
   }, []);
 
-  const postProduct = async (callback?: Function) => {
+  useEffect(() => {
+    updatePictures(state.pictures);
+  }, [state.pictures]);
+
+  const submitProduct = async (callback?: Function) => {
     const tmpErrors = validateForm();
-    console.log('🚀 - addProduct - tmpErrors', tmpErrors);
+    console.log('🚀 - ProductDrawer - tmpErrors', tmpErrors);
     if (tmpErrors.length === undefined) {
       console.log('will not sending the data to backend');
       return;
     }
-    setPosting(true);
+    setSending(true);
     console.log('sending data to the backend');
     console.log(state);
 
-    // TODO: if edit mode append hidden data like product id and etc...
-    const formData = new FormData();
-    formData.append('store', state.store as string);
-    formData.append('name', state.name);
-    formData.append('category', state.category);
-    formData.append('description', state.description);
-    // compressing pictures
-    if (state.pictures) {
-      for (let picture of state.pictures) {
-        const compressedPicture = await compressImage(picture);
-        formData.append('pictures', compressedPicture as Blob);
-      }
-    }
-    formData.append('price', state.price);
-    formData.append('discount', state.discount);
-    formData.append('available', state.available === true ? 'true' : 'false');
-
-    // TODO: if edit mode update else create
-    pb.collection('products')
-      .create(formData)
-      .then((res) => {
-        console.log(res);
-        callback && callback();
-        enqueueSnackbar('Product Added!', { variant: 'success' });
-        addProduct(res);
-      })
-      .catch((err) => {
-        handleError(err, 'AddProduct, postProduct()', enqueueSnackbar);
-      })
-      .finally(() => {
-        setPosting(false);
-      });
+    onSubmit && callback && onSubmit(state, callback);
   };
 
   const clearForm = () => {
     dispatch({ type: 'clearAll' });
     const storeId = localStorage.getItem('store');
     dispatch({ key: 'store', value: storeId });
-    setCategoryLabel(null);
+    setCategory(null);
     setErrors(null);
     setPictures([]);
   };
@@ -192,13 +205,13 @@ const ProductDrawer: React.FC<Props> = ({
   };
 
   const handleSubmitAndClear = () => {
-    postProduct(() => {
+    submitProduct(() => {
       clearForm();
     });
   };
 
   const handleSubmitAndClose = () => {
-    postProduct(() => {
+    submitProduct(() => {
       clearForm();
       handleClose();
     });
@@ -210,10 +223,8 @@ const ProductDrawer: React.FC<Props> = ({
   if (open) {
     return (
       <>
-        <FullScreenLoading open={posting}>
-          <Typography sx={{ marginTop: 2 }}>
-            Adding Products To The Store...
-          </Typography>
+        <FullScreenLoading open={sending}>
+          <Typography sx={{ marginTop: 2 }}>{texts.sending}</Typography>
         </FullScreenLoading>
         <Dialog
           onKeyPress={(e: any) => {
@@ -222,9 +233,7 @@ const ProductDrawer: React.FC<Props> = ({
           open={open}
           onClose={handleClose}
         >
-          <DialogTitle>
-            {editMode ? `Edit ${initialState.name}` : 'Add Product'}
-          </DialogTitle>
+          <DialogTitle>{texts.title}</DialogTitle>
 
           <Divider />
 
@@ -232,10 +241,10 @@ const ProductDrawer: React.FC<Props> = ({
             <Grid container direction={'column'} gap={2}>
               <CategoryPicker
                 sx={{ width: width }}
-                value={categoryLabel}
+                value={category}
                 errors={errors}
                 onChange={(event: any, newValue: any | null) => {
-                  setCategoryLabel(newValue);
+                  setCategory(newValue);
                   const tmpCat =
                     newValue?.id === undefined ? null : newValue?.id;
                   dispatch({ key: 'category', value: tmpCat });

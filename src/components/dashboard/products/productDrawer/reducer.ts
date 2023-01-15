@@ -10,9 +10,16 @@ export type ProductState = {
 };
 
 export type ProductAction = {
-  type?: string;
+  type?:
+    | 'addPicture'
+    | 'setPictures'
+    | 'setAsMainPicture'
+    | 'deletePicture'
+    | 'setState'
+    | 'clearAll';
   key?: string | undefined;
   value?: string | boolean | FileList | undefined | null;
+  state?: any;
 };
 
 export const initialState: ProductState = {
@@ -47,22 +54,16 @@ export function reducer(state: ProductState, action: ProductAction) {
         [action.key as string]: [...(action.value as FileList)],
       };
 
+    case 'setPictures':
+      return { ...state, pictures: action.value };
+
     case 'setAsMainPicture': {
       const index = parseInt(action.key as string);
       const tmpPicture = state.pictures.splice(index, 1);
       return { ...state, pictures: [...tmpPicture, ...state.pictures] };
     }
 
-    case 'replacePicture': {
-      // const index = parseInt(action.key);
-      // const tmpPicture = state.pictures.splice(index, 1);
-      // return { ...state, pictures: [...tmpPicture, ...state.pictures] };
-    }
-
-    // TODO clean code(as string...)
-
     case 'deletePicture': {
-      //   console.clear();
       const index = parseInt(action.key as string);
       console.log('🚀 - index', index);
 
@@ -72,6 +73,9 @@ export function reducer(state: ProductState, action: ProductAction) {
       console.log('🚀 - { ...tmpState }', { ...tmpState });
       return { ...tmpState };
     }
+
+    case 'setState':
+      return { ...action.state };
 
     case 'clearAll':
       return { ...initialState };

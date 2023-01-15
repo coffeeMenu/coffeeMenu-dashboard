@@ -10,7 +10,6 @@ type Props = {
 };
 
 const sort = (products: any) => {
-  console.log('products', products);
   products = products.sort((a: any, b: any) => b.available - a.available);
   return products;
 };
