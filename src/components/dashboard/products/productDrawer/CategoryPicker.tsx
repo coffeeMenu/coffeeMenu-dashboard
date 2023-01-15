@@ -1,12 +1,32 @@
 import { Autocomplete, TextField, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
-import { getCategories } from './getCategories';
+import { handleError } from '../../../../modules/errorHandler';
+import { pb } from '../../../../modules/pocketbase';
 
 type Props = {
   sx: any;
   value: string;
   onChange: any;
   errors: any;
+};
+
+const getCategories = (setCategories: any) => {
+  pb.collection('products_category')
+    .getFullList(200 /* batch size */, {
+      sort: '-name',
+    })
+    .then((res) => {
+      const options = res.map((item) => {
+        return {
+          label: item.name,
+          id: item.id,
+        };
+      });
+      setCategories(options);
+    })
+    .catch((err) => {
+      handleError(err, 'AddProduct- getCategories');
+    });
 };
 
 const CategoryPicker: FC<Props> = ({ sx, value, onChange, errors }) => {

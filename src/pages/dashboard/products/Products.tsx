@@ -19,11 +19,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import AddProduct from '../../../components/dashboard/products/AddProduct';
 import DeleteProduct from '../../../components/dashboard/products/DeleteProduct';
 import { useProducts } from '../../../contexts/ProductsProvider';
 import { handleError } from '../../../modules/errorHandler';
 import { apiUrl, pb } from '../../../modules/pocketbase';
+import AddProduct from '../../../components/dashboard/products/AddProduct';
 
 const Products = () => {
   const storeId = localStorage.getItem('store');

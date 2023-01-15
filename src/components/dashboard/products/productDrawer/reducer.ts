@@ -1,4 +1,4 @@
-type ProductState = {
+export type ProductState = {
   store: string | null;
   name: string;
   category: any;
@@ -7,6 +7,12 @@ type ProductState = {
   price: string;
   discount: string;
   available: boolean;
+};
+
+export type ProductAction = {
+  type?: string;
+  key?: string | undefined;
+  value?: string | boolean | FileList | undefined | null;
 };
 
 export const initialState: ProductState = {
@@ -20,14 +26,7 @@ export const initialState: ProductState = {
   available: true,
 };
 
-export function reducer(
-  state: ProductState,
-  action: {
-    type?: string;
-    key?: string | undefined;
-    value?: string | boolean | FileList | undefined | null;
-  }
-) {
+export function reducer(state: ProductState, action: ProductAction) {
   console.log('action.type', action.type);
   console.log('action.key', action.key);
   console.log('action.value', action.value);
