@@ -1,7 +1,6 @@
 import { Autocomplete, TextField, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
-import { handleError } from '../../../../modules/errorHandler';
-import { pb } from '../../../../modules/pocketbase';
+import { FC } from 'react';
+import { useCategories } from '../../../../contexts/CategoriesProvider';
 
 type Props = {
   sx: any;
@@ -10,32 +9,8 @@ type Props = {
   errors: any;
 };
 
-const getCategories = (setCategories: any) => {
-  pb.collection('products_category')
-    .getFullList(200 /* batch size */, {
-      sort: '-name',
-    })
-    .then((res) => {
-      const options = res.map((item) => {
-        return {
-          label: item.name,
-          id: item.id,
-        };
-      });
-      setCategories(options);
-    })
-    .catch((err) => {
-      handleError(err, 'AddProduct- getCategories');
-    });
-};
-
 const CategoryPicker: FC<Props> = ({ sx, value, onChange, errors }) => {
-  const [categories, setCategories] = useState<any>([]);
-
-  useEffect(() => {
-    // TODO use autocomplete feature instead
-    getCategories(setCategories);
-  }, []);
+  const { categories } = useCategories();
 
   return (
     <>

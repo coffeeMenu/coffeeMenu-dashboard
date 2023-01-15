@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import RequireAuth from './components/auth/RequireAuth';
 import RequireNotAuth from './components/auth/RequireNotAuth';
+import CategoriesProvider from './contexts/CategoriesProvider';
 import ProductsProvider from './contexts/ProductsProvider';
 import { r } from './modules/routes';
 import Dashboard from './pages/dashboard/Dashboard';
@@ -23,7 +24,9 @@ function App() {
               path={r.products}
               element={
                 <ProductsProvider>
-                  <Products />
+                  <CategoriesProvider>
+                    <Products />
+                  </CategoriesProvider>
                 </ProductsProvider>
               }
             />
