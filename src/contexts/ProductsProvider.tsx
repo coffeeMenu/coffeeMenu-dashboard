@@ -42,8 +42,11 @@ const ProductsProvider: FC<Props> = ({ children }) => {
     tmpArray.unshift(product);
     setProducts(sort(tmpArray));
   };
-  const updateProduct = (productId: string, product: any) => {
-    // update product if success update state
+  const updateProduct = (product: any) => {
+    const tmp = [...products];
+    const indexToUpdate = tmp.findIndex((p) => p.id === product.id);
+    tmp[indexToUpdate] = product;
+    setProducts(tmp);
   };
   const deleteProduct = (productId: string) => {
     console.log('here is the id');

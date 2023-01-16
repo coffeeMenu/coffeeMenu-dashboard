@@ -205,9 +205,13 @@ const ProductDrawer: React.FC<Props> = ({
   };
 
   const handleSubmitAndClear = () => {
-    submitProduct(() => {
-      clearForm();
-    });
+    if (editMode) {
+      handleSubmitAndClose();
+    } else {
+      submitProduct(() => {
+        clearForm();
+      });
+    }
   };
 
   const handleSubmitAndClose = () => {
@@ -321,7 +325,7 @@ const ProductDrawer: React.FC<Props> = ({
               />
             </Grid>
           </DialogContent>
-          <DialogActions sx={{ justifyContent: 'center' }}>
+          <DialogActions sx={{ justifyContent: 'right' }}>
             <Button color="secondary" onClick={handleCancel}>
               cancel
             </Button>
@@ -333,7 +337,6 @@ const ProductDrawer: React.FC<Props> = ({
               type="submit"
               variant="contained"
               onClick={handleSubmitAndClose}
-              sx={{ flex: 1 }}
             >
               {!editMode ? (
                 <>
@@ -343,7 +346,7 @@ const ProductDrawer: React.FC<Props> = ({
               ) : (
                 <>
                   <Edit />
-                  Edit
+                  Apply
                 </>
               )}
             </Button>

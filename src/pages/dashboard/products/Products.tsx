@@ -24,6 +24,7 @@ import { useProducts } from '../../../contexts/ProductsProvider';
 import { handleError } from '../../../modules/errorHandler';
 import { apiUrl, pb } from '../../../modules/pocketbase';
 import AddProduct from '../../../components/dashboard/products/AddProduct';
+import EditProduct from '../../../components/dashboard/products/EditProduct';
 
 const Products = () => {
   const storeId = localStorage.getItem('store');
@@ -37,6 +38,8 @@ const Products = () => {
   });
 
   const [showAddProduct, setShowAddProduct] = useState(false);
+  const [showEditProduct, setShowEditProduct] = useState(false);
+  const [editProduct, setEditProduct] = useState<any>();
 
   const checkIfAnyProduct = () => {
     pb.collection('products')
@@ -87,6 +90,11 @@ const Products = () => {
   return (
     <>
       <AddProduct open={showAddProduct} setOpen={setShowAddProduct} />
+      <EditProduct
+        open={showEditProduct}
+        setOpen={setShowEditProduct}
+        product={editProduct}
+      />
       <DeleteProduct
         open={openDeleteProduct}
         setOpen={setOpenDeleteProduct}
@@ -132,7 +140,12 @@ const Products = () => {
                   >
                     {p.price}
                   </Box>
-                  <IconButton>
+                  <IconButton
+                    onClick={() => {
+                      setEditProduct(p);
+                      setShowEditProduct(true);
+                    }}
+                  >
                     <EditTwoTone
                       sx={{ opacity: 0.8, color: p.available ? '' : 'gray' }}
                       color="primary"
