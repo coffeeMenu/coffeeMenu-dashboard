@@ -26,3 +26,5 @@ TODO: remove `any` types
 TODO: performance test(dev tools(make browser use less hardware))
 TODO: 3break point really small/ small /big + bigger
 TODO: a script to add console.count(${component name}) in every component to check rendering cycle
+
+TODO: price input(seperate by comma)

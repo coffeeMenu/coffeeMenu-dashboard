@@ -18,9 +18,11 @@ export const compressImage = (file: File): Promise<File | Blob | undefined> => {
       mimeType: 'auto',
       // TODO test a transparent png
       convertTypes: 'image/png',
-      convertSize: 5000000,
+      convertSize: 1000000,
       success(result) {
         resolve(result);
+        console.log(result);
+
         console.log('res');
       },
       error(err) {
