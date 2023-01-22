@@ -21,9 +21,6 @@ export const compressImage = (file: File): Promise<File | Blob | undefined> => {
       convertSize: 1000000,
       success(result) {
         resolve(result);
-        console.log(result);
-
-        console.log('res');
       },
       error(err) {
         console.error(err.message);

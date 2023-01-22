@@ -13,7 +13,6 @@ import { randomName } from '../../modules/randomName';
 
 const SetStoreNameIfNot = () => {
   const [show, setShow] = useState(false);
-  const [isSet, setIsSet] = useState(false);
   const [storeName, setStoreName] = useState('');
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const SetStoreNameIfNot = () => {
           console.log(res);
           if (res.items.length > 0) {
             localStorage.setItem('store', res.items[0].id);
-            setIsSet(true);
           } else {
             setShow(true);
           }
@@ -51,7 +49,6 @@ const SetStoreNameIfNot = () => {
       .then((res) => {
         console.log(res);
         localStorage.setItem('store', res.id);
-        setIsSet(true);
         setShow(false);
         callback && callback();
       })

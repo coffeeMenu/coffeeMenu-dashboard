@@ -113,7 +113,6 @@ const ProductDrawer: React.FC<Props> = ({
     const response = await fetch(imageUrl);
     const blob = await response.blob();
     const file = new File([blob], 'image.png', { type: blob.type });
-    console.log(file);
     return file;
   };
 
@@ -130,7 +129,6 @@ const ProductDrawer: React.FC<Props> = ({
   useEffect(() => {
     if (initialState.pictures) {
       Promise.all(getPictures()).then((pics: any) => {
-        console.log('🚀 - Promise.all - pics', pics);
         dispatch({
           type: 'setPictures',
           value: pics,
@@ -174,7 +172,6 @@ const ProductDrawer: React.FC<Props> = ({
 
   const submitProduct = async (callback?: Function) => {
     const tmpErrors = validateForm();
-    console.log('🚀 - ProductDrawer - tmpErrors', tmpErrors);
     if (tmpErrors.length === undefined) {
       console.log('will not sending the data to backend');
       return;

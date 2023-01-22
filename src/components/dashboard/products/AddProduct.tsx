@@ -48,7 +48,6 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
         pb.collection('products')
           .create(formData)
           .then((res) => {
-            console.log(res);
             callback && callback();
             enqueueSnackbar('Product Added!', { variant: 'success' });
             addProduct(res);

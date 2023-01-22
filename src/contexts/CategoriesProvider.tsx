@@ -39,10 +39,6 @@ const CategoriesProvider: FC<Props> = ({ children }) => {
   const [categories, setCategories] = useState<any>();
 
   useEffect(() => {
-    console.log('categories has been changed', categories);
-  }, [categories]);
-
-  useEffect(() => {
     getCategories(setCategories);
   }, []);
 

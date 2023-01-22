@@ -49,8 +49,6 @@ const ProductsProvider: FC<Props> = ({ children }) => {
     setProducts(tmp);
   };
   const deleteProduct = (productId: string) => {
-    console.log('here is the id');
-    console.log(productId);
     const tmpArray = products.filter((p: any) => p.id !== productId);
     setProducts(sort(tmpArray));
   };

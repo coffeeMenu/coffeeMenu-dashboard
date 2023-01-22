@@ -19,7 +19,6 @@ const DeleteProduct: React.FC<Props> = ({ id, name, open, setOpen }) => {
   };
 
   const handleDelete = () => {
-    console.log(`${name}(${id}) will be deleted`);
     pb.collection('products')
       .delete(id)
       .then(() => {

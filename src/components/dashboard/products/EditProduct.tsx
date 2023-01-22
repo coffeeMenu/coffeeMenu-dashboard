@@ -76,9 +76,6 @@ const EditProduct: React.FC<Props> = ({ open = false, setOpen, product }) => {
           state.available === true ? 'true' : 'false'
         );
         console.log('editing product:', product);
-        for (let pair of formData.entries()) {
-          console.log(pair[0] + ', ' + pair[1]);
-        }
 
         pb.collection('products')
           .update(product.id, formData)

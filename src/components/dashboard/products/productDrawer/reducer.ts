@@ -34,9 +34,8 @@ export const initialState: ProductState = {
 };
 
 export function reducer(state: ProductState, action: ProductAction) {
-  console.log('action.type', action.type);
-  console.log('action.key', action.key);
-  console.log('action.value', action.value);
+  console.log('prevState: ', state);
+  console.log('action: ', action);
 
   switch (action.type) {
     case 'addPicture':
@@ -65,12 +64,8 @@ export function reducer(state: ProductState, action: ProductAction) {
 
     case 'deletePicture': {
       const index = parseInt(action.key as string);
-      console.log('🚀 - index', index);
-
       const tmpState = state;
-      console.log('🚀 - tmpState', tmpState);
       tmpState.pictures.splice(index, 1);
-      console.log('🚀 - { ...tmpState }', { ...tmpState });
       return { ...tmpState };
     }
 
