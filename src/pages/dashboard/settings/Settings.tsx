@@ -1,39 +1,41 @@
-import { Cancel, Check, Edit } from '@mui/icons-material';
-import { Button, Grid, TextField } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
+import EditableTextInput from '../../../components/dashboard/settings/EditableTextInput';
 import { handleError } from '../../../modules/errorHandler';
 import { pb } from '../../../modules/pocketbase';
 
 const Settings = () => {
   const [store, setStore] = useState<any>();
-  const [editMode, setEditMode] = useState(false);
+  const [nameEditMode, setNameEditMode] = useState(false);
+  const [userNameEditMode, setUserNameEditMode] = useState(false);
   const prevStore = useRef<any>();
   const textInput = useRef<any>(null);
+  const textInput2 = useRef<any>(null);
 
   const storeId = localStorage.getItem('store');
 
-  const getStoreName = () => {
+  const getStore = () => {
     pb.collection('stores')
       .getFirstListItem(`id="${storeId}"`)
       .then((res) => {
         console.log(res);
-
         setStore(res);
         prevStore.current = res;
       })
       .catch((err) => {
-        handleError(err, 'Settings, getStoreName');
+        handleError(err, 'Settings, getStore');
       });
   };
 
   useEffect(() => {
-    getStoreName();
+    getStore();
   }, []);
 
   useEffect(() => {
-    if (editMode) textInput.current.focus();
-  }, [editMode]);
+    if (nameEditMode) textInput.current.focus();
+    if (userNameEditMode) textInput2.current.focus();
+  }, [nameEditMode, userNameEditMode]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -41,10 +43,11 @@ const Settings = () => {
     pb.collection('stores')
       .update(storeId as string, store)
       .then(() => {
-        enqueueSnackbar(`Name changed to ${store.name} successfully`, {
+        enqueueSnackbar(`Settings Change Successfully`, {
           variant: 'success',
         });
-        setEditMode(false);
+        setNameEditMode(false);
+        setUserNameEditMode(false);
         prevStore.current = store;
       })
       .catch((err) => {
@@ -52,62 +55,48 @@ const Settings = () => {
       });
   };
   const handleCancel = () => {
-    setEditMode(false);
+    setNameEditMode(false);
+    setUserNameEditMode(false);
     setStore(prevStore.current);
   };
 
   return (
-    <Grid container alignItems="center">
-      <TextField
-        disabled={!editMode}
+    <>
+      <Typography fontSize={'large'} sx={{ fontSize: 30 }}>
+        Store Settings
+      </Typography>
+      <Divider />
+      <br />
+      <br />
+      <EditableTextInput
+        disabled={!nameEditMode}
         inputRef={textInput}
         label="Store Name:"
-        variant="outlined"
         value={store?.name || ''}
-        onClick={() => {
-          setEditMode(true);
-          // change focus to it
-        }}
-        onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+        editMode={nameEditMode}
+        setEditMode={setNameEditMode}
+        handleSubmit={handleSubmit}
+        handleCancel={handleCancel}
         onChange={(e) => {
           setStore({ ...store, name: e.target.value });
         }}
       />
-      {editMode ? (
-        <>
-          <Button
-            onClick={() => {
-              handleSubmit();
-            }}
-            sx={{ marginLeft: 2 }}
-            variant="contained"
-          >
-            <Check />
-          </Button>
-          <Button
-            onClick={() => {
-              handleCancel();
-            }}
-            sx={{ marginLeft: 1, background: 'gray' }}
-            variant="contained"
-            color="error"
-          >
-            <Cancel sx={{ opacity: 0.7 }} />
-          </Button>
-        </>
-      ) : (
-        <Button
-          onClick={() => {
-            setEditMode(true);
-            // change focus to it
-          }}
-          sx={{ marginLeft: 2 }}
-          variant="contained"
-        >
-          <Edit />
-        </Button>
-      )}
-    </Grid>
+      <br />
+
+      <EditableTextInput
+        disabled={!userNameEditMode}
+        inputRef={textInput2}
+        label="Store Username:"
+        value={store?.username || ''}
+        editMode={userNameEditMode}
+        setEditMode={setUserNameEditMode}
+        handleSubmit={handleSubmit}
+        handleCancel={handleCancel}
+        onChange={(e) => {
+          setStore({ ...store, username: e.target.value });
+        }}
+      />
+    </>
   );
 };
 

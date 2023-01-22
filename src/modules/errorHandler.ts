@@ -30,12 +30,10 @@ export const handleError = (
     enqueueSnackbar &&
       enqueueSnackbar("Can't connect to server!", { variant: 'error' });
   }
-  
-  
 
   console.log('on: ', stack);
 
   // if status === unauthorized => logout();
 
-  // TODO: translation + better error messages(more user friendly)
+  // TODO: translation + better error messages(more user friendly)(if massage is x return y)
 };
