@@ -1,7 +1,5 @@
 import {
-  Delete,
   DeleteTwoTone,
-  Edit,
   EditTwoTone,
   ShoppingBagTwoTone,
 } from '@mui/icons-material';
@@ -9,7 +7,6 @@ import {
   Avatar,
   Box,
   Button,
-  Divider,
   Grid,
   IconButton,
   List,
@@ -30,7 +27,6 @@ const Products = () => {
   const storeId = localStorage.getItem('store');
   const { products, fetchAllProducts } = useProducts();
   const [loading, setLoading] = useState(true);
-  const [isAnyProduct, setIsAnyProduct] = useState<boolean | undefined>();
   const [openDeleteProduct, setOpenDeleteProduct] = useState(false);
   const [deleteProduct, setDeleteProduct] = useState({
     name: '',
@@ -50,9 +46,6 @@ const Products = () => {
         const total = res.totalItems;
         if (total > 0) {
           fetchAllProducts();
-          setIsAnyProduct(true);
-        } else {
-          setIsAnyProduct(false);
         }
       })
       .catch((err) => {
@@ -72,7 +65,7 @@ const Products = () => {
     setDeleteProduct({ id: id, name: name });
   };
 
-  if (loading && isAnyProduct === undefined) return <></>;
+  if (loading && products === undefined) return <></>;
 
   const AddProductButton = (
     <Button
@@ -101,7 +94,7 @@ const Products = () => {
         id={deleteProduct.id}
         name={deleteProduct.name}
       />
-      {isAnyProduct ? (
+      {products?.length > 0 ? (
         <>
           {AddProductButton}
           <List sx={{ width: '100%' }}></List>
