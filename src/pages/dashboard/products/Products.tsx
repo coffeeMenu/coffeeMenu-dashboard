@@ -95,6 +95,7 @@ const Products = () => {
         name={deleteProduct.name}
       />
       {products?.length > 0 ? (
+        // TODO on product click show a product drawer with detailed information
         <>
           {AddProductButton}
           <List sx={{ width: '100%' }}></List>

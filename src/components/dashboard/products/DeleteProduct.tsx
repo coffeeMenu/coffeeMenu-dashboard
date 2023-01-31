@@ -37,9 +37,7 @@ const DeleteProduct: React.FC<Props> = ({ id, name, open, setOpen }) => {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          Are you sure you want to delete {name}?
-        </DialogTitle>
+        <DialogTitle id="responsive-dialog-title">delete `{name}`?</DialogTitle>
         <DialogActions>
           <Button color="secondary" onClick={handleClose}>
             Cancel

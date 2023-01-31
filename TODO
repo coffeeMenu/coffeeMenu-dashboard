@@ -28,3 +28,5 @@ TODO: 3break point really small/ small /big + bigger
 TODO: a script to add console.count(${component name}) in every component to check rendering cycle
 
 TODO: price input(seperate by comma)
+
+TODO: on edit product compressed images shouldnt be compress again...
