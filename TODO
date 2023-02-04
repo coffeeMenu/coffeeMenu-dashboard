@@ -30,3 +30,5 @@ TODO: a script to add console.count(${component name}) in every component to che
 TODO: price input(seperate by comma)
 
 TODO: on edit product compressed images shouldnt be compress again...
+
+TODO: smallScreenView -> bigScreenView
