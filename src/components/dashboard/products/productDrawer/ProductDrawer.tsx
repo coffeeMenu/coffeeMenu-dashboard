@@ -1,4 +1,3 @@
-import { Add, Edit } from '@mui/icons-material';
 import {
   Button,
   Dialog,
@@ -10,9 +9,10 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCategories } from '../../../../contexts/CategoriesProvider';
-import { apiUrl } from '../../../../modules/pocketbase';
+import { log_productDrawerChange } from '../../../../logConfig';
+import { findCategoryObject } from '../../../../modules/utils';
 import FullScreenLoading from '../../../shared/FullScreenLoading';
 import AvailableToggle from './AvailableToggle';
 import CategoryPicker from './CategoryPicker';
@@ -24,36 +24,50 @@ import PriceInput from './PriceInput';
 import { ProductState, reducer } from './reducer';
 
 type Props = {
+  state: ProductState;
+  dispatch: any;
+  category: any;
+  setCategory: any;
+  pictures: any;
+  setPictures: any;
   open: boolean;
   setOpen: Function;
   sending: boolean;
   setSending: Function;
   editMode?: boolean;
-  initialState: ProductState & { collectionId?: string; id?: string };
   onSubmit: Function;
   texts: {
     title: string;
     sending: string;
   };
+  primaryButton: any;
 };
 
 // TODO performance test
 
 const ProductDrawer: React.FC<Props> = ({
+  state,
+  dispatch,
+  category,
+  setCategory,
+  pictures,
+  setPictures,
   open = false,
   setOpen,
   sending = false,
   setSending,
   editMode = false,
-  initialState,
   onSubmit,
   texts,
+  primaryButton,
 }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [category, setCategory] = useState<any>(null);
   const [errors, setErrors] = useState<any>(null);
-  const [pictures, setPictures] = useState<any>();
   const { categories } = useCategories();
+
+  useEffect(() => {
+    console.log('newState');
+    console.log(state);
+  });
 
   const validateForm = () => {
     let tmpErrors: any = [];
@@ -88,7 +102,7 @@ const ProductDrawer: React.FC<Props> = ({
     return tmpErrors;
   };
 
-  const updatePictures = (pics: any) => {
+  const createObjectFromURL = (pics: any) => {
     if (!pics || typeof pics[0] === 'string') {
       setPictures(undefined);
       return;
@@ -109,66 +123,17 @@ const ProductDrawer: React.FC<Props> = ({
     }
   };
 
-  const urlToObject = async (imageUrl: string) => {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    const file = new File([blob], 'image.png', { type: blob.type });
-    return file;
-  };
-
-  const getPictures = () => {
-    const tmpPictures =
-      initialState.pictures && initialState.pictures.length > 0
-        ? initialState.pictures.map((p: string) => {
-            return urlToObject(p);
-          })
-        : undefined;
-    return tmpPictures;
-  };
-
   useEffect(() => {
-    if (initialState.pictures) {
-      Promise.all(getPictures()).then((pics: any) => {
-        dispatch({
-          type: 'setPictures',
-          value: pics,
-        });
-        // updatePictures(pics);
-      });
-    }
-    if (categories) {
-      const tmpInitialCategory = categories.filter((cat: any) => {
-        return cat.id === initialState.category;
-      })[0];
-      setCategory(tmpInitialCategory);
-    }
-    if (JSON.stringify(initialState) !== JSON.stringify(state)) {
-      dispatch({ type: 'setState', state: initialState });
-    }
-  }, [initialState]);
-
-  useEffect(() => {
-    console.log('state changed: ', state);
+    log_productDrawerChange && console.log('🚨 state changed: ', state);
 
     if (pictures?.length !== state.pictures?.length) {
-      updatePictures(state.pictures);
+      createObjectFromURL(state.pictures);
     }
 
     if (errors) {
       validateForm();
     }
   }, [state]);
-
-  useEffect(() => {
-    if (!editMode) {
-      const storeId = localStorage.getItem('store');
-      dispatch({ key: 'store', value: storeId });
-    }
-  }, []);
-
-  useEffect(() => {
-    updatePictures(state.pictures);
-  }, [state.pictures]);
 
   const submitProduct = async (callback?: Function) => {
     const tmpErrors = validateForm();
@@ -184,9 +149,9 @@ const ProductDrawer: React.FC<Props> = ({
   };
 
   const clearForm = () => {
+    console.log('clearForm');
+
     dispatch({ type: 'clearAll' });
-    const storeId = localStorage.getItem('store');
-    dispatch({ key: 'store', value: storeId });
     setCategory(null);
     setErrors(null);
     setPictures([]);
@@ -194,6 +159,9 @@ const ProductDrawer: React.FC<Props> = ({
 
   const handleClose = () => {
     setOpen(false);
+    if (editMode) {
+      clearForm();
+    }
   };
 
   const handleCancel = () => {
@@ -249,6 +217,8 @@ const ProductDrawer: React.FC<Props> = ({
                   const tmpCat =
                     newValue?.id === undefined ? null : newValue?.id;
                   dispatch({ key: 'category', value: tmpCat });
+                  const tmpCategory = findCategoryObject(tmpCat, categories);
+                  setCategory(tmpCategory);
                 }}
               />
 
@@ -335,17 +305,7 @@ const ProductDrawer: React.FC<Props> = ({
               variant="contained"
               onClick={handleSubmitAndClose}
             >
-              {!editMode ? (
-                <>
-                  <Add />
-                  Add
-                </>
-              ) : (
-                <>
-                  <Edit />
-                  Apply
-                </>
-              )}
+              {primaryButton}
             </Button>
           </DialogActions>
         </Dialog>

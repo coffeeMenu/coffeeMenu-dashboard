@@ -1,26 +1,41 @@
+import { Add } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useProducts } from '../../../contexts/ProductsProvider';
 import { compressImage } from '../../../modules/compressImage';
 import { handleError } from '../../../modules/errorHandler';
 import { pb } from '../../../modules/pocketbase';
 import ProductDrawer from './productDrawer/ProductDrawer';
-import { initialState } from './productDrawer/reducer';
+import { initialState, reducer } from './productDrawer/reducer';
 type Props = {
   open: boolean;
   setOpen: Function;
 };
 const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [category, setCategory] = useState<any>(null);
+  const [pictures, setPictures] = useState<any>();
   const [sending, setSending] = useState(false);
   const { addProduct } = useProducts();
   const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    const storeId = localStorage.getItem('store');
+    dispatch({ key: 'store', value: storeId });
+  }, []);
+
   return (
     <ProductDrawer
       open={open}
+      state={state}
+      dispatch={dispatch}
+      category={category}
+      setCategory={setCategory}
+      pictures={pictures}
+      setPictures={setPictures}
       setOpen={setOpen}
       sending={sending}
       setSending={setSending}
-      initialState={initialState}
       texts={{
         title: 'Add Product',
         sending: 'Adding Product To The Store...',
@@ -59,6 +74,12 @@ const AddProduct: React.FC<Props> = ({ open = false, setOpen }) => {
             setSending(false);
           });
       }}
+      primaryButton={
+        <>
+          <Add />
+          Add
+        </>
+      }
     />
   );
 };

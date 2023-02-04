@@ -1,3 +1,5 @@
+import { log_productDrawerReducer } from '../../../../logConfig';
+
 export type ProductState = {
   store: string | null;
   name: string;
@@ -34,8 +36,8 @@ export const initialState: ProductState = {
 };
 
 export function reducer(state: ProductState, action: ProductAction) {
-  console.log('prevState: ', state);
-  console.log('action: ', action);
+  log_productDrawerReducer && console.log('💽 prevState: ', state);
+  log_productDrawerReducer && console.log('🔥 action: ', action);
 
   switch (action.type) {
     case 'addPicture':
@@ -73,7 +75,8 @@ export function reducer(state: ProductState, action: ProductAction) {
       return { ...action.state };
 
     case 'clearAll':
-      return { ...initialState };
+      const storeId = localStorage.getItem('store');
+      return { ...initialState, store: storeId };
 
     default:
       return { ...state, [action.key as string]: action.value };

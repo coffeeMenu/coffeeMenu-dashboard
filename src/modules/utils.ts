@@ -5,3 +5,16 @@ export const compactTitle = (title: string) => {
   }
   return title;
 };
+
+export const findCategoryObject = (CategoryId: string, categories: any) => {
+  return categories.filter((cat: any) => {
+    return cat.id === CategoryId;
+  })[0];
+};
+
+export const urlToObject = async (imageUrl: string, fileName: string) => {
+  const response = await fetch(imageUrl);
+  const blob = await response.blob();
+  const file = new File([blob], fileName, { type: blob.type });
+  return file;
+};
