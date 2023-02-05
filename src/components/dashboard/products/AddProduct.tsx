@@ -12,7 +12,7 @@ import FullScreenLoading from '../../shared/FullScreenLoading';
 import AvailableToggle from './shared/AvailableToggle';
 import CategoryPicker from './shared/CategoryPicker';
 import { createFormData } from './shared/createFormData';
-import { createObjectFromURL } from './shared/createObjectFromUrl';
+import { createUrlFromObject } from '../../../modules/imageParser';
 import DescriptionInput from './shared/DescriptionInput';
 import DiscountInput from './shared/DiscountInput';
 import NameInput from './shared/NameInput';
@@ -35,7 +35,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
         log_addProductStateChange && console.log('🚨 state changed: ', state);
 
         if (pictures?.length !== state.pictures?.length) {
-            createObjectFromURL(state.pictures, setPictures);
+            createUrlFromObject(state.pictures, setPictures);
         }
 
         if (errors) {
@@ -44,7 +44,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
     }, [state]);
 
     useEffect(() => {
-        createObjectFromURL(state.pictures, setPictures);
+        createUrlFromObject(state.pictures, setPictures);
     }, [state.pictures]);
 
     const clearForm = () => {
@@ -83,6 +83,12 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
         }
 
         const formData = await createFormData(state);
+        console.log(state.pictures);
+        console.log('sending data to backend: ');
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+
         pb.collection('products')
             .create(formData)
             .then((res) => {
