@@ -1,16 +1,25 @@
 import { compressImage } from '../../../../modules/compressImage';
+import { createObjectFromUrl } from '../../../../modules/imageParser';
+import { apiUrl } from '../../../../modules/pocketbase';
 
-export const createFormData = async (state: any) => {
+// https://pocketbase.io/docs/files-handling
+export const createFormData = async (state: any, collectionId?: string, productId?: string) => {
     const formData = new FormData();
     formData.append('store', state.store as string);
     formData.append('name', state.name);
     formData.append('category', state.category);
     formData.append('description', state.description);
-    // compressing pictures
     if (state.pictures) {
         for (let picture of state.pictures) {
-            const compressedPicture = await compressImage(picture);
-            formData.append('pictures', compressedPicture as Blob);
+            if (typeof picture === 'object') {
+                // compressing new images
+                const compressedPicture = await compressImage(picture);
+                formData.append('pictures', compressedPicture as Blob);
+            } else {
+                // sending old images again
+                const tmpPic = `${apiUrl}/api/files/${collectionId}/${productId}/${picture}`;
+                formData.append('pictures', await createObjectFromUrl(tmpPic));
+            }
         }
     }
     formData.append('price', state.price);

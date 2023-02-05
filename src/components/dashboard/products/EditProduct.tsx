@@ -6,13 +6,12 @@ import { useCategories } from '../../../contexts/CategoriesProvider';
 import { useProducts } from '../../../contexts/ProductsProvider';
 import { log_editProductStateChange } from '../../../logConfig';
 import { handleError } from '../../../modules/errorHandler';
-import { pb } from '../../../modules/pocketbase';
+import { apiUrl, pb } from '../../../modules/pocketbase';
 import { compactTitle, findCategoryObject } from '../../../modules/utils';
 import FullScreenLoading from '../../shared/FullScreenLoading';
 import AvailableToggle from './shared/AvailableToggle';
 import CategoryPicker from './shared/CategoryPicker';
 import { createFormData } from './shared/createFormData';
-import { createObjectFromURL } from './shared/createObjectFromUrl';
 import DescriptionInput from './shared/DescriptionInput';
 import DiscountInput from './shared/DiscountInput';
 import NameInput from './shared/NameInput';
@@ -33,40 +32,61 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
         discount: product.discount,
         available: product.available,
     };
+
+    const getPictureUrl = (picture: string) => {
+        return `${apiUrl}/api/files/${product.collectionId}/${product.id}/${picture}`;
+    };
+
+    let initPics = product.pictures.map((pic: string) => {
+        return getPictureUrl(pic);
+    });
+
     const { categories } = useCategories();
     const initCategory = findCategoryObject(product.category, categories);
 
     const [state, dispatch] = useReducer(reducer, initialState);
     const [category, setCategory] = useState<any>(initCategory);
-    // TODO Init pictures
-    const [pictures, setPictures] = useState<any>();
+    const [pictures, setPictures] = useState<any>(initPics);
     const [sending, setSending] = useState(false);
     const { updateProduct } = useProducts();
     const { enqueueSnackbar } = useSnackbar();
     const [errors, setErrors] = useState<any>(null);
 
+    const updatePicturesFromStatePictures = () => {
+        let tmp: any = [];
+        for (let pic of state.pictures) {
+            if (typeof pic === 'object') {
+                tmp.push(URL.createObjectURL(pic));
+            } else {
+                tmp.push(getPictureUrl(pic));
+            }
+        }
+
+        setPictures(tmp);
+    };
+
     useEffect(() => {
         dispatch({ type: 'setState', state: initialState });
         setCategory(initCategory);
-        // set pictures
+        // TODO set pictures
         setErrors(false);
     }, [product]);
 
     useEffect(() => {
         log_editProductStateChange && console.log('🚨 state changed: ', state);
 
-        // if (pictures?.length !== state.pictures?.length) {
-        //     createObjectFromURL(state.pictures, setPictures);
-        // }
+        if (pictures?.length !== state.pictures?.length) {
+            updatePicturesFromStatePictures();
+        }
 
         if (errors) {
             validateForm(state, setErrors);
         }
     }, [state]);
 
-    // useEffect(() => {
-    //     createObjectFromURL(state.pictures, setPictures);
-    // }, [state.pictures]);
+    useEffect(() => {
+        state.pictures && updatePicturesFromStatePictures();
+    }, [state.pictures]);
 
     const clearForm = () => {
         dispatch({ type: 'clearAll' });
@@ -98,24 +118,29 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
             return;
         }
 
-        // const formData = await createFormData(state);
+        const formData = await createFormData(state, product.collectionId, product.id);
 
-        const formData = new FormData();
-        formData.append('store', state.store as string);
-        formData.append('name', state.name);
-        formData.append('category', state.category);
-        formData.append('description', state.description);
-        // // compressing pictures
-        // if (state.pictures) {
-        //     for (let picture of state.pictures) {
-        //         const compressedPicture = await compressImage(picture);
-        //         formData.append('pictures', compressedPicture as Blob);
-        //     }
-        // }
-        formData.append('pictures', state.pictures);
-        formData.append('price', state.price);
-        formData.append('discount', state.discount);
-        formData.append('available', state.available === true ? 'true' : 'false');
+        console.log('sending data to backend: ');
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+
+        const data = {
+            store: product.store,
+            name: product.name,
+            category: product.category,
+            // in order to upload the new pictures we need to delete old pictures
+            pictures: null,
+        };
+
+        // deleting old pictures
+        await pb
+            .collection('products')
+            .update(product.id, data)
+            .then(() => {
+                callback();
+                setSending(false);
+            });
 
         pb.collection('products')
             .update(product.id, formData)
