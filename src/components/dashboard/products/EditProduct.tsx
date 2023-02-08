@@ -19,6 +19,7 @@ import PictureInput from './shared/PictureInput';
 import PriceInput from './shared/PriceInput';
 import { reducer } from './shared/reducer';
 import { validateForm } from './shared/validateForm';
+import { getPictureUrl } from 'coffeemenu-shard-logic';
 
 // TODO define product type
 const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Function; product: any }) => {
@@ -33,12 +34,8 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
         available: product.available,
     };
 
-    const getPictureUrl = (picture: string) => {
-        return `${apiUrl}/api/files/${product.collectionId}/${product.id}/${picture}`;
-    };
-
     let initPics = product.pictures.map((pic: string) => {
-        return getPictureUrl(pic);
+        return getPictureUrl(apiUrl, product.collectionId, product.id, pic);
     });
 
     const { categories } = useCategories();
@@ -58,7 +55,7 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
             if (typeof pic === 'object') {
                 tmp.push(URL.createObjectURL(pic));
             } else {
-                tmp.push(getPictureUrl(pic));
+                tmp.push(getPictureUrl(apiUrl, product.collectionId, product.id, pic));
             }
         }
 

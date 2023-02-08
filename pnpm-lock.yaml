@@ -9,6 +9,7 @@ specifiers:
   '@types/react': ^18.0.26
   '@types/react-dom': ^18.0.9
   '@vitejs/plugin-react': ^3.0.0
+  coffeemenu-shard-logic: link:../coffeeMenu-shared-logic
   compressorjs: ^1.1.1
   notistack: ^2.0.8
   pocketbase: ^0.9.0
@@ -35,6 +36,7 @@ devDependencies:
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.10
   '@vitejs/plugin-react': 3.0.0_vite@4.0.3
+  coffeemenu-shard-logic: link:../coffeeMenu-shared-logic
   typescript: 4.9.4
   vite: 4.0.3
 
