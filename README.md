@@ -1,9 +1,7 @@
-## Getting Started
+# coffeeMenu-dashboard
 
-- clone this repo
-- `pnpm install`
-- also install `coffeemenu-shared-logic` package by running:
+## getting started
 
-```bash
-pnpm i -D ../coffeeMenu-shared-logic # (run `yarn build` in `/coffeeMenu-shared-logic` first!)
-```
+1) clone this repo
+2) `cd coffeeMenu-dashboard`
+3) run: `pnpm i`
