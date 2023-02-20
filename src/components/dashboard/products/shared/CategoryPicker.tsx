@@ -13,30 +13,13 @@ const CategoryPicker: FC<Props> = ({ sx, value, onChange, errors }) => {
   const { categories } = useCategories();
 
   return (
-    <>
-      {/* TODO: https://mui.com/material-ui/react-autocomplete/ */}
-      {/* TODO: add icons next to category text */}
-      {/* TODO user should be able to add a category if cat is not there */}
-      <Autocomplete
-        sx={sx}
-        disablePortal
-        options={categories}
-        value={value}
-        onChange={onChange}
-        renderInput={(params) => (
-          <TextField
-            error={errors && errors.category ? true : false}
-            {...params}
-            label="Category*"
-          />
-        )}
-      />
-      {errors ? (
-        <Typography sx={{ color: '#ff4949' }}>{errors.category}</Typography>
-      ) : (
-        <></>
-      )}
-    </>
+      <>
+          {/* TODO: https://mui.com/material-ui/react-autocomplete/ */}
+          {/* TODO: add icons next to category text */}
+          {/* TODO user should be able to add a category if cat is not there */}
+          <Autocomplete sx={sx} disablePortal options={categories} value={value} onChange={onChange} renderInput={(params) => <TextField error={errors && errors.category ? true : false} {...params} label="دسته بندی*" />} />
+          {errors ? <Typography sx={{ color: '#ff4949' }}>{errors.category}</Typography> : <></>}
+      </>
   );
 };
 

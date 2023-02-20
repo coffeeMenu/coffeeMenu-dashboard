@@ -28,13 +28,13 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
         const pathname = window.location.pathname;
         switch (pathname) {
             case r.settings:
-                return 'Settings';
+                return 'تنظیمات';
             case r.products:
-                return 'Products';
+                return 'محصولات';
             case r.bugReport:
-                return 'Bug Report';
+                return 'گزارش مشکل';
             default:
-                return 'Dashboard';
+                return 'داشبورد';
         }
     };
 
@@ -73,7 +73,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
             {/* TODO: add functionality */}
             <MenuItem onClick={logout}>
                 <LogoutTwoTone sx={{ marginRight: 2 }} />
-                Logout
+                خروج
             </MenuItem>
         </Menu>
     );
@@ -89,17 +89,17 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
             {/* TODO: sub menu categories */}
             {[
                 {
-                    text: 'Products',
+                    text: 'محصولات',
                     icon: <ShoppingBagTwoTone />,
                     link: r.products,
                 },
                 {
-                    text: 'Settings',
+                    text: 'تنظیمات',
                     icon: <SettingsTwoTone />,
                     link: r.settings,
                 },
                 {
-                    text: 'Bug Report',
+                    text: 'گزارش مشکل',
                     icon: <BugReport />,
                     link: r.bugReport,
                 },

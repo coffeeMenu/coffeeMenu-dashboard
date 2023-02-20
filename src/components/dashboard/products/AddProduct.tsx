@@ -14,7 +14,7 @@ import CategoryPicker from './shared/CategoryPicker';
 import { createFormData } from './shared/createFormData';
 import { createUrlFromObject } from '../../../modules/imageParser';
 import DescriptionInput from './shared/DescriptionInput';
-import DiscountInput from './shared/DiscountInput';
+// import DiscountInput from './shared/DiscountInput';
 import NameInput from './shared/NameInput';
 import PictureInput from './shared/PictureInput';
 import PriceInput from './shared/PriceInput';
@@ -93,7 +93,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
             .create(formData)
             .then((res) => {
                 callback();
-                enqueueSnackbar('Product Added!', { variant: 'success' });
+                enqueueSnackbar('محصول اضافه شد!', { variant: 'success' });
                 addProduct(res);
             })
             .catch((err) => {
@@ -111,7 +111,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
         return (
             <>
                 <FullScreenLoading open={sending}>
-                    <Typography sx={{ marginTop: 2 }}>Adding Product To The Store...</Typography>
+                    <Typography sx={{ marginTop: 2 }}>درحال اضافه کردن محصول...</Typography>
                 </FullScreenLoading>
                 <Dialog
                     onKeyPress={(e: any) => {
@@ -119,7 +119,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
                     }}
                     open={open}
                     onClose={handleClose}>
-                    <DialogTitle>Add Product</DialogTitle>
+                    <DialogTitle>اضافه کردن محصول</DialogTitle>
 
                     <Divider />
 
@@ -188,7 +188,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
                                     dispatch({ key: 'price', value: e.target.value });
                                 }}
                             />
-
+                            {/* 
                             <DiscountInput
                                 sx={{ width: width }}
                                 value={state.discount}
@@ -196,7 +196,7 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
                                     dispatch({ key: 'discount', value: e.target.value });
                                 }}
                                 onKeyPress={(e: any) => e.key === 'Enter' && handleSubmitAndClear()}
-                            />
+                            /> */}
 
                             <AvailableToggle
                                 value={state.available}
@@ -208,12 +208,12 @@ const AddProduct = ({ open, setOpen }: { open: boolean; setOpen: Function }) => 
                     </DialogContent>
                     <DialogActions sx={{ justifyContent: 'right' }}>
                         <Button color="secondary" onClick={handleCancel}>
-                            cancel
+                            انصراف
                         </Button>
-                        <Button onClick={handleSubmitAndClear}>add another</Button>
+                        <Button onClick={handleSubmitAndClear}>اضافه کن و بمون</Button>
                         <Button type="submit" variant="contained" onClick={handleSubmitAndClose}>
                             <Add />
-                            Add
+                            اضافه
                         </Button>
                     </DialogActions>
                 </Dialog>

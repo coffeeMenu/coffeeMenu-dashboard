@@ -13,7 +13,7 @@ import AvailableToggle from './shared/AvailableToggle';
 import CategoryPicker from './shared/CategoryPicker';
 import { createFormData } from './shared/createFormData';
 import DescriptionInput from './shared/DescriptionInput';
-import DiscountInput from './shared/DiscountInput';
+// import DiscountInput from './shared/DiscountInput';
 import NameInput from './shared/NameInput';
 import PictureInput from './shared/PictureInput';
 import PriceInput from './shared/PriceInput';
@@ -144,7 +144,7 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
             .then((res) => {
                 console.log(res);
                 callback();
-                enqueueSnackbar('Product Edited!', { variant: 'success' });
+                enqueueSnackbar('محصول ویرایش شد!', { variant: 'success' });
                 updateProduct(res);
             })
             .catch((err) => {
@@ -162,7 +162,7 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
         return (
             <>
                 <FullScreenLoading open={sending}>
-                    <Typography sx={{ marginTop: 2 }}>Updating Product...</Typography>
+                    <Typography sx={{ marginTop: 2 }}>درحال ویرایش محصول...</Typography>
                 </FullScreenLoading>
                 <Dialog
                     onKeyPress={(e: any) => {
@@ -170,7 +170,7 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
                     }}
                     open={open}
                     onClose={handleClose}>
-                    <DialogTitle>{compactTitle(`Editing ${product.name}`)}</DialogTitle>
+                    <DialogTitle>{compactTitle(`ویرایش ${product.name}`)}</DialogTitle>
 
                     <Divider />
 
@@ -240,14 +240,14 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
                                 }}
                             />
 
-                            <DiscountInput
+                            {/* <DiscountInput
                                 sx={{ width: width }}
                                 value={state.discount}
                                 onChange={(e: any) => {
                                     dispatch({ key: 'discount', value: e.target.value });
                                 }}
                                 onKeyPress={(e: any) => e.key === 'Enter' && handleSubmitAndClose()}
-                            />
+                            /> */}
 
                             <AvailableToggle
                                 value={state.available}
@@ -259,11 +259,11 @@ const EditProduct = ({ open, setOpen, product }: { open: boolean; setOpen: Funct
                     </DialogContent>
                     <DialogActions sx={{ justifyContent: 'right' }}>
                         <Button color="secondary" onClick={handleCancel}>
-                            cancel
+                            انصراف
                         </Button>
                         <Button type="submit" variant="contained" onClick={handleSubmitAndClose}>
                             <Done />
-                            Save Changes
+                            ذخیره تغییرات
                         </Button>
                     </DialogActions>
                 </Dialog>

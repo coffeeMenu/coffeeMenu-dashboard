@@ -27,7 +27,7 @@ const BugReport = () => {
             .create(data)
             .then((res: any) => {
                 console.log(res);
-                enqueueSnackbar('report has been sent to the developer.', {
+                enqueueSnackbar('گزارش برای توسعه دهنده ارسال شد.', {
                     variant: 'success',
                 });
                 navigate('/');
@@ -41,27 +41,27 @@ const BugReport = () => {
         <form onSubmit={handleSubmit}>
             <br />
             <Typography sx={{ paddingX: 4, fontSize: '.9em', opacity: 0.8 }}>
-                please try to explain your problem as much detailed as possible and thank you for your contribution to making CoffeeMenu better <Favorite />
+                لطفا تا جایی که میتونی سعی کن به دقیق ترین شکل مشکلی که هنگام کار با coffeeMenu بهش برخوردی رو توضیح بدی. ازت ممنونیم که به بهتر شدنمون کمک میکنی <Favorite />
             </Typography>
             <br />
             <Grid container spacing={2} textAlign={'center'} justifyContent="center">
                 <Grid item xs={12}>
-                    <TextField required label="Title" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <TextField required label="عنوان" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField required label="Description" fullWidth multiline minRows={5} maxRows={6} value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <TextField required label="توضیحات" fullWidth multiline minRows={5} maxRows={6} value={description} onChange={(e) => setDescription(e.target.value)} />
                 </Grid>
                 <Button sx={{ marginTop: 2 }} type="submit" variant="contained" onClick={handleSubmit}>
-                    Send Report <Send sx={{ marginLeft: 1 }} />
+                    <Send sx={{ marginLeft: 1 }} /> ارسال مشکل
                 </Button>
             </Grid>
             <br />
             <Typography sx={{ paddingX: 10, fontSize: '.9em', opacity: 0.5 }}>
-                also be aware that by submitting this form we will save your{' '}
-                <a href="https://en.wikipedia.org/wiki/User_agent" target={'_blank'}>
-                    User-Agent
+                لطفا این رو هم بدون که با پرکردن این فرم ما برای حل مشکل{' '}
+                <a href="https://fa.wikipedia.org/wiki/%D8%B9%D8%A7%D9%85%D9%84_%DA%A9%D8%A7%D8%B1%D8%A8%D8%B1" target={'_blank'}>
+                    User-Agentات
                 </a>{' '}
-                and your coffeeMenu user id in background.
+                رو ذخیره میکنیم.
             </Typography>
         </form>
     );

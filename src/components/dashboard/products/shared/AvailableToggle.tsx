@@ -9,7 +9,7 @@ type Props = {
 const AvailableToggle: FC<Props> = ({ value, onChange }) => {
     return (
         <Grid>
-            Available:
+            موجود:
             <Switch checked={value} onChange={onChange} value={value} />
         </Grid>
     );

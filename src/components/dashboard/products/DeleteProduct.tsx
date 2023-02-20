@@ -31,28 +31,19 @@ const DeleteProduct: React.FC<Props> = ({ id, name, open, setOpen }) => {
   };
 
   return (
-    <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">delete `{name}`?</DialogTitle>
-        <DialogActions>
-          <Button color="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDelete}
-            autoFocus
-          >
-            YES
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+      <div>
+          <Dialog open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
+              <DialogTitle id="responsive-dialog-title">حذف بشه `{name}`?</DialogTitle>
+              <DialogActions>
+                  <Button color="secondary" onClick={handleClose}>
+                      انصراف
+                  </Button>
+                  <Button variant="contained" color="error" onClick={handleDelete} autoFocus>
+                      بله
+                  </Button>
+              </DialogActions>
+          </Dialog>
+      </div>
   );
 };
 

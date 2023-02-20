@@ -75,7 +75,7 @@ const Products = () => {
           sx={{ marginTop: 2 }}
           variant="contained">
           {/* TODO sticky */}
-          Add Product
+          اضافه کن
       </Button>
   );
 
@@ -155,7 +155,7 @@ const Products = () => {
                   <Grid item>
                       <ShoppingBagTwoTone sx={{ fontSize: 200, opacity: 0.1 }} />
                   </Grid>
-                  <Grid item>no product been has been added yet...</Grid>
+                  <Grid item>لیست محصولات خالیه!</Grid>
                   <Grid item>{AddProductButton}</Grid>
               </Grid>
           )}

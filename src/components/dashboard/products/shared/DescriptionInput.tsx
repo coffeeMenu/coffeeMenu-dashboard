@@ -21,23 +21,23 @@ const DescriptionInput: FC<Props> = ({ sx, value, onChange }) => {
   }, [descriptionMultiline]);
 
   return (
-    <TextField
-      sx={sx}
-      label="Description (opt)"
-      variant="outlined"
-      value={value}
-      onChange={onChange}
-      multiline={descriptionMultiline}
-      minRows={4}
-      maxRows={5}
-      inputRef={descriptionInput}
-      onFocus={() => {
-        setDescriptionMultiline(true);
-      }}
-      onBlur={() => {
-        setDescriptionMultiline(false);
-      }}
-    />
+      <TextField
+          sx={sx}
+          label="توضیحات"
+          variant="outlined"
+          value={value}
+          onChange={onChange}
+          multiline={descriptionMultiline}
+          minRows={4}
+          maxRows={5}
+          inputRef={descriptionInput}
+          onFocus={() => {
+              setDescriptionMultiline(true);
+          }}
+          onBlur={() => {
+              setDescriptionMultiline(false);
+          }}
+      />
   );
 };
 

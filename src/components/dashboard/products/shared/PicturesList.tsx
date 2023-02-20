@@ -47,8 +47,8 @@ const PicturesList: React.FC<Props> = ({ open = false, setOpen, pictures, onSetA
                 <DialogTitle>
                     <Grid container justifyContent={'space-between'}>
                         <Grid item>
-                            Pictures({pictures.length})<Typography>for better outcome,</Typography>
-                            <Typography>use square size photos.</Typography>
+                            عکس‌ها({pictures.length})<Typography>برای خروجی بهتر,</Typography>
+                            <Typography>از عکس های مربعی استفاده کن.</Typography>
                         </Grid>
                         <Grid item>
                             <Button

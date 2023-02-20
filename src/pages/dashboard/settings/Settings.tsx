@@ -86,7 +86,7 @@ const Settings = () => {
     return (
         <>
             <Typography fontSize={'large'} sx={{ fontSize: 30 }}>
-                Store Settings
+                تنظیمات فروشگاه
             </Typography>
             <Divider />
             <br />
@@ -94,7 +94,7 @@ const Settings = () => {
             <EditableTextInput
                 disabled={!nameEditMode}
                 inputRef={textInput}
-                label="Store Name:"
+                label="نام فروشگاه:"
                 value={store?.name || ''}
                 editMode={nameEditMode}
                 setEditMode={setNameEditMode}
@@ -109,7 +109,7 @@ const Settings = () => {
             <EditableTextInput
                 disabled={!userNameEditMode}
                 inputRef={textInput2}
-                label="Store Username:"
+                label="نام کاربری:"
                 value={store?.username || ''}
                 editMode={userNameEditMode}
                 setEditMode={setUserNameEditMode}

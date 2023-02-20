@@ -58,59 +58,56 @@ const SetStoreNameIfNot = () => {
   };
 
   const handleSubmit = () => {
-    createStore(storeName, () => {
-      enqueueSnackbar('Store Name saved.', { variant: 'success' });
-    });
+      createStore(storeName, () => {
+          enqueueSnackbar('نام فروشگاه ذخیره شد.', { variant: 'success' });
+      });
   };
 
   const handleClose = () => {
-    createStore(randomName(), () => {
-      enqueueSnackbar('you can always changed it in settings', {
-        variant: 'info',
+      createStore(randomName(), () => {
+          enqueueSnackbar('همیشه میتونی از تنظیمات تغییرش بدی', {
+              variant: 'info',
+          });
+          enqueueSnackbar('باشه... فعلا یه اسم رندوم برات انتخاب کردیم', {
+              variant: 'success',
+          });
       });
-      enqueueSnackbar('OK, we picked a random name for you', {
-        variant: 'success',
-      });
-    });
-    setShow(false);
+      setShow(false);
   };
 
   if (show)
-    return (
-      <Dialog open={show}>
-        <DialogTitle>
-          Welcome to coffeeMenu 👋
-          <br /> Lest start by naming Your Store!
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            what should we call your store? (this will be displayed to end
-            customers)
-          </DialogContentText>
-          <TextField
-            onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-            margin="dense"
-            id="name"
-            label="Store Name"
-            type="name"
-            fullWidth
-            variant="standard"
-            required
-            autoFocus
-            value={storeName}
-            onChange={(e) => {
-              setStoreName(e.target.value);
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>i will choose later</Button>
-          <Button type="submit" variant="contained" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
+      return (
+          <Dialog open={show}>
+              <DialogTitle>
+                  خوش اومدی به coffeeMenu 👋
+                  <br /> بذار با تنظیم نام فروشگاه شروع کنیم!
+              </DialogTitle>
+              <DialogContent>
+                  <DialogContentText>باید فروشگاهت رو چی صدا کنیم؟</DialogContentText>
+                  <TextField
+                      onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                      margin="dense"
+                      id="name"
+                      label="Store Name"
+                      type="name"
+                      fullWidth
+                      variant="standard"
+                      required
+                      autoFocus
+                      value={storeName}
+                      onChange={(e) => {
+                          setStoreName(e.target.value);
+                      }}
+                  />
+              </DialogContent>
+              <DialogActions>
+                  <Button onClick={handleClose}>بعدا</Button>
+                  <Button type="submit" variant="contained" onClick={handleSubmit}>
+                      ثبت
+                  </Button>
+              </DialogActions>
+          </Dialog>
+      );
 
   // modal, input,toasts, place holder, lets start by choosing you store name
   // what we should call you store?

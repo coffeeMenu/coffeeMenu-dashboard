@@ -30,8 +30,8 @@ const PictureInput: FC<Props> = ({ onChange, errors, pictures, onSetAsMainPictur
             <Grid container sx={{ display: 'flex' }}>
                 <Grid item sx={{ flex: 20 }}>
                     <Button sx={{ width: '100%' }} variant="contained" component="label">
-                        {pictures == undefined || pictures.length === 0 ? 'Set Pictures' : 'Add More'}
                         <PhotoLibrary sx={{ marginLeft: 1 }} />
+                        {pictures == undefined || pictures.length === 0 ? 'انتخاب عکس(ها)' : 'اضافه کردن'}
                         <input type="file" hidden accept="image/jpg, image/jpeg, image/png" multiple onChange={onChange} />
                         {/* TODO later: when chosen show thumbnail + delete + add more+ draggable(rearrange) */}
                     </Button>
@@ -50,7 +50,7 @@ const PictureInput: FC<Props> = ({ onChange, errors, pictures, onSetAsMainPictur
                                     width: 36,
                                     borderRadius: 10,
                                 }}
-                                alt="The house from the offer."
+                                // alt="The house from the offer."
                                 src={pictures && pictures[0]}
                             />
                         </Button>

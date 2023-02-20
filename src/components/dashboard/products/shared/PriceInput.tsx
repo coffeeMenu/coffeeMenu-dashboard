@@ -13,17 +13,17 @@ type Props = {
 
 const PriceInput: FC<Props> = ({ sx, value, onChange }) => {
   return (
-    <TextField
-      sx={sx}
-      label="Price (opt)"
-      variant="outlined"
-      value={value}
-      onChange={onChange}
-      InputProps={{
-        // TODO $/euro/﷼/تومن
-        endAdornment: <InputAdornment position="end">$</InputAdornment>,
-      }}
-    />
+      <TextField
+          sx={sx}
+          label="قیمت"
+          variant="outlined"
+          value={value}
+          onChange={onChange}
+          InputProps={{
+              // TODO $/euro/﷼/تومن
+              endAdornment: <InputAdornment position="end">تومن</InputAdornment>,
+          }}
+      />
   );
 };
 

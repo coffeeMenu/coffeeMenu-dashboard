@@ -36,64 +36,39 @@ export default function Login() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h3">
-          <Logo />
-        </Typography>
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="identifier"
-            label="Email or Username"
-            name="identifier"
-            autoComplete="identifier"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Login
-          </Button>
-          <Grid container>
-            {/* TODO */}
-            {/* <Grid item xs>
+      <Container component="main" maxWidth="xs">
+          <Box
+              sx={{
+                  marginTop: 8,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+              }}>
+              <Typography variant="h3">
+                  <Logo />
+              </Typography>
+              <Typography component="h1" variant="h5">
+                  ورود
+              </Typography>
+              <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                  <TextField margin="normal" required fullWidth id="identifier" label="نام کاربری یا ایمیل" name="identifier" autoComplete="identifier" autoFocus />
+                  <TextField margin="normal" required fullWidth name="password" label="رمز عبور" type="password" id="password" />
+                  <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                      ورود
+                  </Button>
+                  <Grid container>
+                      {/* TODO */}
+                      {/* <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid> */}
-            <Grid item>
-              <TheLink to={r.register}>
-                {"Don't have an account? Register"}
-              </TheLink>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Container>
+                      <Grid item>
+                          <TheLink to={r.register}>{'حساب نداری؟ ثبت نام کن'}</TheLink>
+                      </Grid>
+                  </Grid>
+              </Box>
+          </Box>
+      </Container>
   );
 }

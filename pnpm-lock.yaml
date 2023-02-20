@@ -16,6 +16,8 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-router-dom: ^6.6.1
+  stylis: ^4.1.3
+  stylis-plugin-rtl: ^2.1.1
   typescript: ^4.9.3
   vite: ^4.0.0
 
@@ -31,6 +33,8 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.6.1_biqbaboplfbrettd7655fr4n2y
+  stylis: 4.1.3
+  stylis-plugin-rtl: 2.1.1_stylis@4.1.3
 
 devDependencies:
   '@types/react': 18.0.26
@@ -959,6 +963,11 @@ packages:
       yaml: 1.10.2
     dev: false
 
+  /cssjanus/2.1.0:
+    resolution: {integrity: sha512-kAijbny3GmdOi9k+QT6DGIXqFvL96aksNlGr4Rhk9qXDZYWUojU4bRc3IHWxdaLNOqgEZHuXoe5Wl2l7dxLW5g==}
+    engines: {node: '>=10.0.0'}
+    dev: false
+
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
 
@@ -1344,6 +1353,15 @@ packages:
   /source-map/0.5.7:
     resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /stylis-plugin-rtl/2.1.1_stylis@4.1.3:
+    resolution: {integrity: sha512-q6xIkri6fBufIO/sV55md2CbgS5c6gg9EhSVATtHHCdOnbN/jcI0u3lYhNVeuI65c4lQPo67g8xmq5jrREvzlg==}
+    peerDependencies:
+      stylis: 4.x
+    dependencies:
+      cssjanus: 2.1.0
+      stylis: 4.1.3
     dev: false
 
   /stylis/4.1.3:
