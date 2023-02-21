@@ -89,7 +89,7 @@ const PicturesList: React.FC<Props> = ({ open = false, setOpen, pictures, onSetA
                                                     onClick={() => {
                                                         onSetAsMainPicture(index);
                                                     }}>
-                                                    Set as main
+                                                    استفاده به عنوان پیشفرض
                                                 </MenuItem>
                                                 {/* TODO later */}
                                                 {/* <MenuItem>Replace</MenuItem> */}
@@ -98,7 +98,7 @@ const PicturesList: React.FC<Props> = ({ open = false, setOpen, pictures, onSetA
                                                         onDeletePicture(index);
                                                     }}
                                                     sx={{ color: '#ff4949' }}>
-                                                    Delete
+                                                    حذف
                                                 </MenuItem>
                                             </Menu>
                                         </Box>
