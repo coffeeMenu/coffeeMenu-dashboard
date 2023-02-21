@@ -21,4 +21,7 @@ export const themeConfigs: ThemeOptions = {
         borderRadius: 20,
     },
     direction: 'rtl',
+    typography: {
+        fontFamily: [' Vazirmatn', 'roboto', 'sans-serif', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'].join(','),
+    },
 };
