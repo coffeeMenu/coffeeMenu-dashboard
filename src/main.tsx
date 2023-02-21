@@ -15,40 +15,45 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import { Close } from '@mui/icons-material';
 import { themeConfigs } from './configs/themeConfigs';
 
+import rtlPlugin from 'stylis-plugin-rtl';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
+
 const darkTheme = createTheme({
-  ...themeConfigs,
+    ...themeConfigs,
+});
+
+const cacheRtl = createCache({
+    key: 'muirtl',
+    stylisPlugins: [prefixer, rtlPlugin],
 });
 
 // TODO: clean consoles on production
 
 const SnackbarCloseButton: React.FC<any> = ({ snackbarKey }) => {
-  const { closeSnackbar } = useSnackbar();
+    const { closeSnackbar } = useSnackbar();
 
-  return (
-    <IconButton onClick={() => closeSnackbar(snackbarKey)}>
-      <Close />
-    </IconButton>
-  );
+    return (
+        <IconButton onClick={() => closeSnackbar(snackbarKey)}>
+            <Close />
+        </IconButton>
+    );
 };
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <>
-    {/* TODO React.StrictMode */}
-    <BrowserRouter>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <SnackbarProvider
-          autoHideDuration={5000}
-          maxSnack={3}
-          preventDuplicate
-          action={(snackbarKey) => (
-            <SnackbarCloseButton snackbarKey={snackbarKey} />
-          )}
-        >
-          <App />
-        </SnackbarProvider>
-      </ThemeProvider>
-    </BrowserRouter>
-  </>
-  // TODO React.StrictMode
+    <>
+        {/* TODO React.StrictMode */}
+        <BrowserRouter>
+            <CacheProvider value={cacheRtl}>
+                <ThemeProvider theme={darkTheme}>
+                    <CssBaseline />
+                    <SnackbarProvider autoHideDuration={5000} maxSnack={3} preventDuplicate action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}>
+                        <App />
+                    </SnackbarProvider>
+                </ThemeProvider>
+            </CacheProvider>
+        </BrowserRouter>
+    </>
+    // TODO React.StrictMode
 );

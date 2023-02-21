@@ -19,9 +19,9 @@ const PriceInput: FC<Props> = ({ sx, value, onChange }) => {
           variant="outlined"
           value={value}
           onChange={onChange}
+          dir={'rtl'}
           InputProps={{
-              // TODO $/euro/﷼/تومن
-              endAdornment: <InputAdornment position="end">تومن</InputAdornment>,
+              endAdornment: <InputAdornment position="end">هزار تومان</InputAdornment>,
           }}
       />
   );

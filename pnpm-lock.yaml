@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@emotion/cache': ^11.10.5
   '@emotion/react': ^11.10.5
   '@emotion/styled': ^11.10.5
   '@fontsource/roboto': ^4.5.8
@@ -22,6 +23,7 @@ specifiers:
   vite: ^4.0.0
 
 dependencies:
+  '@emotion/cache': 11.10.5
   '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
   '@emotion/styled': 11.10.5_qvatmowesywn4ye42qoh247szu
   '@fontsource/roboto': 4.5.8
